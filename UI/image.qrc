@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/pixmap">
+        <file>hill/seen.png</file>
+        <file>hill/unseen.png</file>
+        <file>sand/seen.png</file>
+        <file>sand/unseen.png</file>
+        <file>grass/seen.png</file>
+        <file>grass/unseen.png</file>
+        <file>forest/seen.png</file>
+        <file>forest/unseen.png</file>
+        <file>base/base11.png</file>
+        <file>base/base21.png</file>
+        <file>state/attack1.png</file>
+        <file>state/hover1.png</file>
+        <file>state/range1.png</file>
+        <file>unit/1_1_1.png</file>
+        <file>unit/1_2_1.png</file>
+    </qresource>
+</RCC>

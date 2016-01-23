@@ -11,6 +11,7 @@
 class Player{
 public:
     int ID;//玩家编号
+    int Race;//玩家种族
     int Coin;//资金
     int Capacity;//产能
     int Ori_Capacity;//产能
@@ -19,24 +20,54 @@ public:
     QList<int> CanTrainList;//可训练的单位ID列表
     QList<int> StudiedList;//已研究ID列表
     QList<int> CanStudyList;//可研究ID列表
+
     int IsAI;//是否是电脑，暂无设计
     bool IsDead;//是否已经死亡
 
 public:
-    Player(int id, QList<Base> baselist, int ai);
+    Player(int id,int race, QList<Base> baselist, int ai);
     ~Player(){}
 
     void study(int tech);
     Unit train(int id, Base base);
 };
 
-Player::Player(int id, QList<Base> baselist, int ai):IsAI(ai),ID(id),IsDead(false),BaseList(baselist){
+Player::Player(int id, int race, QList<Base> baselist, int ai):IsAI(ai),ID(id),Race(race),IsDead(false),BaseList(baselist){
+
     /*********此处初始化玩家科技和各种数值***************/
-    StudiedList.append(0);
-    CanStudyList.append(1);
-    CanTrainList.append(1);
-    Coin=50;
-    Capacity=Ori_Capacity=5;
+    switch(Race){
+    case 1:
+        StudiedList.append(0);
+        CanStudyList.append(1);
+        CanTrainList.append(1);
+        Coin=50;
+        Capacity=Ori_Capacity=5;
+        break;
+    case 2:
+        StudiedList.append(0);
+        CanStudyList.append(1);
+        CanTrainList.append(1);
+        Coin=50;
+        Capacity=Ori_Capacity=5;
+        break;
+    case 3:
+        StudiedList.append(0);
+        CanStudyList.append(1);
+        CanTrainList.append(1);
+        Coin=50;
+        Capacity=Ori_Capacity=5;
+        break;
+    case 4:
+        StudiedList.append(0);
+        CanStudyList.append(1);
+        CanTrainList.append(1);
+        Coin=50;
+        Capacity=Ori_Capacity=5;
+        break;
+
+    }
+
+
 }
 
 void Player::study(int tech){

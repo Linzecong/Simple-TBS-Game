@@ -47,7 +47,7 @@ void Grid::setType(Grid::GRIDTYPE type){
         Cost=3;
         break;
     case HILL:
-        Cost=10;
+        Cost=20;
         break;
     }
     Type=type;

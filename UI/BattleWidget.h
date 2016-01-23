@@ -40,6 +40,7 @@ private:
     GameSystem System;//游戏系统
     Map* MyMap;//地图指针，简化书写
 
+
     double Size;//格子大小，全局大小比例
     void paintMap();//绘制地图
     void resetState();//重置状态
@@ -52,13 +53,13 @@ private:
     void enemyUnitList_Click();
     void move_Click();
     void attack_Click();
-    void skip_Click();
+    void cure_Click();
 
     void longPressed();//长按后出发的效果
     int time;//保存按住的时间
     void longPress(){
         time++;
-        if(time==15){
+        if(time==8){
             longPressed();
             time=0;
         }
@@ -96,6 +97,13 @@ public:
     void resizeEvent(QResizeEvent * e){
         View.setGeometry(this->geometry());
     }
+        QTimer UpdateTimer;
+        void updatescene(){
+            for(int i=0;i<=MyMap->Width;i++)
+                for(int j=0;j<=MyMap->Height;j++)
+                    Item[i][j]->changePixmapState();
+            Scene.update();
+        }
 };
 
 void BattleWidget::setUpAnimation(QPointF temp){
@@ -137,7 +145,7 @@ BattleWidget::BattleWidget(GameSystem a){
     time=0;
     Size=4;//以后要通过屏幕太小更改
     State=CHOOSEGRID;
-
+    UpdateTimer.start(500);
     System=a;
     System.Player_Turn=&System.PlayerList[0];
     MyMap=&System.GameMap;
@@ -180,7 +188,8 @@ BattleWidget::BattleWidget(GameSystem a){
     connect(EnemyUnitList,&QListWidget::clicked,this,&BattleWidget::enemyUnitList_Click);
     connect(Action_Widget->Move,&QPushButton::clicked,this,&BattleWidget::move_Click);
     connect(Action_Widget->Attack,&QPushButton::clicked,this,&BattleWidget::attack_Click);
-    connect(Action_Widget->Skip,&QPushButton::clicked,this,&BattleWidget::skip_Click);
+    connect(Action_Widget->Cure,&QPushButton::clicked,this,&BattleWidget::cure_Click);
+    connect(&UpdateTimer,&QTimer::timeout,this,&BattleWidget::updatescene);
 
     paintMap();
 }
@@ -202,6 +211,8 @@ void BattleWidget::paintMap(){
             connect(&Item[i][j]->Press,&QPushButton::clicked,this,&BattleWidget::click);
             connect(&Item[i][j]->Timer,&QTimer::timeout,this,&BattleWidget::longPress);
             connect(&Item[i][j]->Timer,&QTimer::objectNameChanged,this,&BattleWidget::zero);
+
+            Item[i][j]->PixmapState=QString::number(i%4+1);
             if(i%2==0)
                 Item[i][j]->setPos(i*60*Size,j*70*Size);
             else
@@ -221,22 +232,22 @@ void BattleWidget::resetList(){
 
     for(int i=0;i<CurrentItem->MyGrid->NormalUnit.length();i++){
         if(CurrentItem->MyGrid->NormalUnit[i]->Player==System.Player_Turn->ID){
-            MyUnitList->addItem((CurrentItem->MyGrid->NormalUnit[i]->Name));
+            MyUnitList->addItem((CurrentItem->MyGrid->NormalUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->NormalUnit[i]->Player));
             MyUnitList_P.append(CurrentItem->MyGrid->NormalUnit[i]);
         }
         else{
-            EnemyUnitList->addItem((CurrentItem->MyGrid->NormalUnit[i]->Name));
+            EnemyUnitList->addItem((CurrentItem->MyGrid->NormalUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->NormalUnit[i]->Player));
             EnemyUnitList_P.append(CurrentItem->MyGrid->NormalUnit[i]);
         }
     }
 
     for(int i=0;i<CurrentItem->MyGrid->FlyUnit.length();i++){
         if(CurrentItem->MyGrid->FlyUnit[i]->Player==System.Player_Turn->ID){
-            MyUnitList->addItem((CurrentItem->MyGrid->FlyUnit[i]->Name));
+            MyUnitList->addItem((CurrentItem->MyGrid->FlyUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->FlyUnit[i]->Player));
             MyUnitList_P.append(CurrentItem->MyGrid->FlyUnit[i]);
         }
         else{
-            EnemyUnitList->addItem((CurrentItem->MyGrid->FlyUnit[i]->Name));
+            EnemyUnitList->addItem((CurrentItem->MyGrid->FlyUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->FlyUnit[i]->Player));
             EnemyUnitList_P.append(CurrentItem->MyGrid->FlyUnit[i]);
         }
     }
@@ -267,8 +278,9 @@ void BattleWidget::resetList(){
         EnemyUnitList->setVisible(true);
         EnemyListShow->start();
         if(!Data_Widget->isVisible()){
+            if(State!=ATTACK)
             CurrentUnit=EnemyUnitList_P[0];
-            Data_Widget->setData(CurrentUnit);
+            Data_Widget->setData(EnemyUnitList_P[0]);
             Data_Widget->setVisible(true);
             DataWShow->start();
         }
@@ -280,8 +292,6 @@ void BattleWidget::click(){
         for(int i=0;i<=MyMap->Width;i++)
             for(int j=0;j<=MyMap->Height;j++)
                 if(Item[i][j]->IsHover==true){
-                    if(CurrentItem==Item[i][j])
-                        return;
                     CurrentItem=Item[i][j];
                     setUpAnimation(CurrentItem->scenePos());
                     if(Item[i][j]->IsSeen==0){
@@ -347,7 +357,6 @@ void BattleWidget::showBase_Click(){
             System.GameMap.GameMap[Base_Widget->NewUnit.X][Base_Widget->NewUnit.Y].FlyUnit.append(&System.Player_Turn->UnitList[System.Player_Turn->UnitList.length()-1]);
         }
     }
-    Scene.update();
 
     if(Base_Widget->IsEnd){
         bool temp=0;
@@ -384,6 +393,8 @@ void BattleWidget::showBase_Click(){
         }
         setView();
     }
+    Scene.update();
+    resetState();
 }
 
 void BattleWidget::resetState(){
@@ -436,6 +447,7 @@ void BattleWidget::move_Click(){
     MyUnitList->setVisible(false);
     Data_Widget->setVisible(false);
     EnemyUnitList->setVisible(false);
+    Scene.update();
 }
 
 void BattleWidget::attack_Click(){
@@ -453,12 +465,15 @@ void BattleWidget::attack_Click(){
     MyUnitList->setVisible(false);
     Data_Widget->setVisible(false);
     EnemyUnitList->setVisible(false);
+    Scene.update();
 }
 
-void BattleWidget::skip_Click(){
+void BattleWidget::cure_Click(){
     CurrentUnit->ActionPoint=0;
     CurrentUnit->IsATKed=1;
+    CurrentUnit->IsCure=1;
     Action_Widget->setData(CurrentUnit,System.Player_Turn->ID);
+    Scene.update();
 
 }
 
@@ -488,6 +503,7 @@ void BattleWidget::setView(){
     for(int i=0;i<=MyMap->Width;i++)
         for(int j=0;j<=MyMap->Height;j++)
             Item[i][j]->update();
+    Scene.update();
 }
 
 #endif // WIDGET_H

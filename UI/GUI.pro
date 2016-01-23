@@ -38,3 +38,6 @@ FORMS += \
     choosewidget.ui \
     studywidget.ui \
     trainwidget.ui
+
+RESOURCES += \
+    image.qrc

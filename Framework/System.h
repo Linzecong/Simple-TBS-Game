@@ -56,18 +56,23 @@ bool GameSystem::canMoveTo(int x, int y, Unit* unit){
     if(unit->canMove()==false)
         return false;
     Map* map= this->GameMap.findWay(unit->X,unit->Y);
-    if(map->GameMap[x][y].Data>unit->ActionPoint)
+    int temp=map->GameMap[x][y].Data;
+    delete map;
+    if(temp>unit->ActionPoint)
         return false;
     else
         return true;
 }
 
 int GameSystem::attack(Unit *atk, Unit *def,Player* atkplayer,Player* defplayer,int range){
+    int BonusATKType=GameMap.GameMap[atk->X][atk->Y].Type;
+    int BonusDEFType=GameMap.GameMap[def->X][def->Y].Type;
+
     int damage=0;
     if(def->UnitType!=Unit::FLY)
-        damage=atk->ATK_Grand-def->DEF;
+        damage=atk->ATK_Grand+atk->Bonus[BonusATKType][0]-def->DEF-def->Bonus[BonusDEFType][2];
     else
-        damage=atk->ATK_Sky-def->DEF;
+        damage=atk->ATK_Sky+atk->Bonus[BonusATKType][1]-def->DEF-def->Bonus[BonusDEFType][2];
 
     if(damage<0)
         damage=0;
@@ -78,9 +83,10 @@ int GameSystem::attack(Unit *atk, Unit *def,Player* atkplayer,Player* defplayer,
     if(canAttack(def,atk,range)){
         int damage1=0;
         if(atk->UnitType!=Unit::FLY)
-            damage1=def->ATK_Grand-atk->DEF;
+            damage1=def->ATK_Grand+def->Bonus[BonusDEFType][0]-atk->DEF-atk->Bonus[BonusATKType][2];
         else
-            damage1=def->ATK_Sky-atk->DEF;
+            damage1=def->ATK_Sky+def->Bonus[BonusDEFType][1]-atk->DEF-atk->Bonus[BonusATKType][2];
+
 
         if(damage1<0)
             damage1=0;
@@ -127,6 +133,12 @@ void GameSystem::turnout(){
         cost+=Player_Turn->UnitList[i].MaintenanceCost;
         Player_Turn->UnitList[i].ActionPoint=Player_Turn->UnitList[i].Ori_ActionPoint;
         Player_Turn->UnitList[i].IsATKed=0;
+        if(Player_Turn->UnitList[i].IsCure=1){
+            Player_Turn->UnitList[i].Life+=Player_Turn->UnitList[i].CurePoint;
+            if(Player_Turn->UnitList[i].Life>Player_Turn->UnitList[i].Ori_Life)
+                Player_Turn->UnitList[i].Life=Player_Turn->UnitList[i].Ori_Life;
+            Player_Turn->UnitList[i].IsCure=0;
+        }
     }
     Player_Turn->Coin-=cost;
     Player_Turn->Coin+=Player_Turn->Capacity;

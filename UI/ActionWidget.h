@@ -12,7 +12,7 @@ class ActionWidget:public QWidget{
 public:
     QPushButton* Attack;
     QPushButton* Move;
-    QPushButton* Skip;
+    QPushButton* Cure;
 
 public:
     ActionWidget(double Size);
@@ -24,15 +24,15 @@ public:
 ActionWidget::ActionWidget(double Size){
     Attack=new QPushButton("攻击",this);
     Move=new QPushButton("移动",this);
-    Skip=new QPushButton("跳过",this);
+    Cure=new QPushButton("治疗",this);
 
     Attack->setGeometry(0,0,40*Size,65*Size/3);
     Move->setGeometry(0,65*Size/3,40*Size,65*Size/3);
-    Skip->setGeometry(0,65*Size/3*2,40*Size,65*Size/3);
+    Cure->setGeometry(0,65*Size/3*2,40*Size,65*Size/3);
 
     Attack->setEnabled(false);
     Move->setEnabled(false);
-    Skip->setEnabled(false);
+    Cure->setEnabled(false);
 
 }
 
@@ -47,15 +47,16 @@ void ActionWidget::setData(Unit *unit,int playerid){
             Move->setEnabled(true);
         else
             Move->setEnabled(false);
-        Skip->setEnabled(true);
 
-        if(unit->ActionPoint==0&&unit->IsATKed==1)
-            Skip->setEnabled(false);
+        Cure->setEnabled(true);
+
+        if(unit->ActionPoint!=unit->Ori_ActionPoint||unit->IsATKed==1)
+            Cure->setEnabled(false);
     }
     else{
         Attack->setEnabled(false);
         Move->setEnabled(false);
-        Skip->setEnabled(false);
+        Cure->setEnabled(false);
     }
 }
 

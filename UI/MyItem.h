@@ -13,6 +13,7 @@
 #include<QPushButton>
 #include <QtOpenGL/QGLWidget>
 #include <QTimer>
+//#include<QImage>
 
 class MyItem:public QGraphicsItem{
 public:
@@ -38,6 +39,9 @@ public:
     bool IsPressed;
     int LY;
     int LX;
+
+
+    QString PixmapState;
 
 public:
     QRectF boundingRect()const;
@@ -79,19 +83,14 @@ public:
         }
     }
 
-public:
-    Qt::GlobalColor getPenColor(int id){
-        switch (id) {
-        case 1:
-            return Qt::blue;
-        case 2:
-            return Qt::red;
-        case 3:
-            return Qt::yellow;
-        case 4:
-            return Qt::white;
-        }
+    void changePixmapState(){
+        static int i=1;
+        i++;
+        if(i==5)
+            i=1;
+        PixmapState=QString::number(i);
     }
+
 };
 
 MyItem::MyItem(double a=1):IsHover(0),RangeMode(0),ATKMode(0),IsSeen(0),Size(a){
@@ -100,137 +99,76 @@ MyItem::MyItem(double a=1):IsHover(0),RangeMode(0),ATKMode(0),IsSeen(0),Size(a){
 
 MyItem::MyItem(Grid* a,double b=1):IsHover(0),RangeMode(0),ATKMode(0),IsSeen(0),Size(b),MyGrid(a){
     this->setAcceptHoverEvents(true);
+
 }
 
 void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
 
     /*绘制格子*/
-    QBrush brush(Qt::green);
+    QPixmap GridPixmap;
+
     if(this->IsSeen){
         if(this->MyGrid->Type==Grid::GRASS)
-            brush.setColor(Qt::green);
+            GridPixmap.load(":/pixmap/grass/seen.png");
         if(this->MyGrid->Type==Grid::SAND)
-            brush.setColor(Qt::yellow);
+            GridPixmap.load(":/pixmap/sand/seen.png");
         if(this->MyGrid->Type==Grid::FOREST)
-            brush.setColor(Qt::cyan);
+            GridPixmap.load(":/pixmap/forest/seen.png");
         if(this->MyGrid->Type==Grid::HILL)
-            brush.setColor(Qt::lightGray);
+            GridPixmap.load(":/pixmap/hill/seen.png");
+
     }
     else{
 
         if(this->MyGrid->Type==Grid::GRASS)
-            brush.setColor(Qt::darkGreen);
+            GridPixmap.load(":/pixmap/grass/unseen.png");
         if(this->MyGrid->Type==Grid::SAND)
-            brush.setColor(Qt::darkYellow);
+            GridPixmap.load(":/pixmap/sand/unseen.png");
         if(this->MyGrid->Type==Grid::FOREST)
-            brush.setColor(Qt::darkCyan);
+            GridPixmap.load(":/pixmap/forest/unseen.png");
         if(this->MyGrid->Type==Grid::HILL)
-            brush.setColor(Qt::darkGray);
+            GridPixmap.load(":/pixmap/hill/unseen.png");
     }
-    QPolygon poly;
-    poly<<QPoint(-20*Size,-35*Size)<<QPoint(20*Size,-35*Size)<<QPoint(40*Size,0)<<QPoint(20*Size,35*Size)<<QPoint(-20*Size,35*Size)<<QPoint(-40*Size,0);
-    QPen pen(Qt::red);
-    pen.setWidth(2*Size);
-    painter->setPen(pen);
-    painter->setBrush(brush);
-    painter->drawPolygon(poly);
+    painter->drawPixmap(-40*Size,-35*Size,GridPixmap);
     /*绘制格子结束*/
 
 
+
+
     /*通过各种状态，绘制焦点*/
+    QPixmap StatePixmap;
     if(IsHover||RangeMode||ATKMode){
-    QPolygon poly1;
-    poly1<<QPoint(-15*Size,-30*Size)<<QPoint(15*Size,-30*Size)<<QPoint(33*Size,0)<<QPoint(15*Size,30*Size)<<QPoint(-15*Size,30*Size)<<QPoint(-33*Size,0);
-    if(IsHover)
-        pen.setColor(Qt::black);
-    if(RangeMode)
-        pen.setColor(Qt::blue);
-    if(ATKMode)
-        pen.setColor(Qt::red);
-    pen.setWidth(1*Size);
-    painter->setPen(pen);
-    painter->drawPolygon(poly1);
+        if(IsHover)
+            StatePixmap.load(":/pixmap/state/hover"+PixmapState+".png");
+        if(RangeMode)
+            StatePixmap.load(":/pixmap/state/range"+PixmapState+".png");
+        if(ATKMode)
+            StatePixmap.load(":/pixmap/state/attack"+PixmapState+".png");
     }
+    painter->drawPixmap(-40*Size,-35*Size,StatePixmap);
     /*绘制焦点结束*/
 
 
     /*绘制基地*/
-    if(this->MyGrid->Construction!=NULL){
-        QRectF rect(-10*Size,-10*Size,20*Size,20*Size);
-        QPen rpen(getPenColor(this->MyGrid->Construction->Player));
-        rpen.setWidth(2*Size);
-        painter->setPen(rpen);
-        painter->drawRect(rect);
+    QPixmap BasePixmap;
+    if(this->MyGrid->Construction!=NULL)
+        BasePixmap.load(":/pixmap/base/base"+QString::number(this->MyGrid->Construction->Player)+PixmapState+".png");
 
-    }
+    painter->drawPixmap(-40*Size,-35*Size,BasePixmap);
     /*绘制基地结束*/
 
 
     /*绘制单位*/
+    QPixmap NormalUnitPixmap;
     if(IsSeen){
-        if(this->MyGrid->NormalUnit.isEmpty()==false){
-            for(int i=0;i<this->MyGrid->NormalUnit.length();i++)
-                switch (this->MyGrid->NormalUnit[i]->ID) {
-                case 1:{
-                    QRectF rect(-5*Size,-5*Size,10*Size,10*Size);
-                    QPen rpen;
-                    rpen.setColor(getPenColor(this->MyGrid->NormalUnit[i]->Player));
-                    rpen.setWidth(2*Size);
-                    painter->setPen(rpen);
-                    painter->drawRect(rect);
-                    break;
-                }
+        if(this->MyGrid->NormalUnit.isEmpty()==false)
+            NormalUnitPixmap.load(":/pixmap/unit/"+QString::number(this->MyGrid->NormalUnit[0]->ID)+"_"+QString::number(this->MyGrid->NormalUnit[0]->Player)+"_"+PixmapState+".png");
+        painter->drawPixmap(-38*Size,-34*Size,NormalUnitPixmap);
 
-                case 2:{
-                    QPolygon poly2;
-                    poly2<<QPoint(-10*Size,0*Size)<<QPoint(10*Size,0*Size)<<QPoint(0*Size,20);
-                    QPen rpen;
-                    rpen.setColor(getPenColor(this->MyGrid->NormalUnit[i]->Player));
-                    rpen.setWidth(2*Size);
-                    painter->setPen(rpen);
-                    painter->drawPolygon(poly2);
-                    break;
-                }
-                case 3:{
-                    QPolygon poly2;
-                    poly2<<QPoint(-10*Size,0*Size)<<QPoint(0*Size,-30)<<QPoint(10*Size,0*Size)<<QPoint(0*Size,30);
-                    QPen rpen;
-                    rpen.setColor(getPenColor(this->MyGrid->NormalUnit[i]->Player));
-                    rpen.setWidth(2*Size);
-                    painter->setPen(rpen);
-                    painter->drawPolygon(poly2);
-                    break;
-                }
-                default:
-                    break;
-                }
-        }
-
-        if(this->MyGrid->FlyUnit.isEmpty()==false){
-            for(int i=0;i<this->MyGrid->FlyUnit.length();i++)
-                switch (this->MyGrid->FlyUnit[i]->ID) {
-                case 4:{
-                    QPolygon poly2;
-                    poly2<<QPoint(-15*Size,0*Size)<<QPoint(15*Size,0*Size)<<QPoint(0*Size,-25);
-                    QPen rpen;
-                    rpen.setColor(getPenColor(this->MyGrid->FlyUnit[i]->Player));
-                    rpen.setWidth(2*Size);
-                    painter->setPen(rpen);
-                    painter->drawPolygon(poly2);
-                    break;
-                }
-                case 5:{
-                    QPolygon poly2;
-                    poly2<<QPoint(-10*Size,-5*Size)<<QPoint(5*Size,-30)<<QPoint(10*Size,-5*Size)<<QPoint(5*Size,30);
-                    QPen rpen;
-                    rpen.setColor(getPenColor(this->MyGrid->FlyUnit[i]->Player));
-                    rpen.setWidth(2*Size);
-                    painter->setPen(rpen);
-                    painter->drawPolygon(poly2);
-                    break;
-                }
-                }
-        }
+        QPixmap FlyUnitPixmap;
+        if(this->MyGrid->FlyUnit.isEmpty()==false)
+            FlyUnitPixmap.load(":/pixmap/unit/"+QString::number(this->MyGrid->FlyUnit[0]->ID)+"_"+QString::number(this->MyGrid->FlyUnit[0]->Player)+"_"+PixmapState+".png");
+        painter->drawPixmap(-38*Size,-34*Size,FlyUnitPixmap);
     }
     /*绘制单位结束*/
 }
@@ -241,7 +179,7 @@ void MyItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
     this->scene()->update();
 }
 
-void MyItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event){   
+void MyItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event){
     IsHover=0;
     update();
     this->scene()->update();

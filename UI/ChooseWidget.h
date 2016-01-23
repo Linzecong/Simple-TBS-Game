@@ -36,7 +36,7 @@ ChooseWidget::ChooseWidget():ui(new Ui::ChooseWidget){
     ui->graphicsView->setScene(&myscene);
     connect(ui->comboBox,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),this,&ChooseWidget::setView);
     connect(ui->pushButton,&QPushButton::clicked,this,&ChooseWidget::showField);
-    ui->graphicsView->setViewport(new QGLWidget);
+    //ui->graphicsView->setViewport(new QGLWidget);
     Size=1;
     setView();
 }
@@ -71,6 +71,7 @@ void ChooseWidget::setView(){
 
 void ChooseWidget::showField(){
     int index=ui->comboBox->currentIndex()+1;
+    int race=ui->comboBox_2->currentIndex()+1;
     Map tempMap(index);
     int player=1;//rand，设置玩家，其他为AI，暂无设计
 
@@ -84,11 +85,11 @@ void ChooseWidget::showField(){
                     if(tempMap.GameMap[j][k].Construction->Player==i)
                         tempBase.append(*(tempMap.GameMap[j][k].Construction));
         if(i==player){
-            Player tempPlayer(i,tempBase,false);
+            Player tempPlayer(i,race,tempBase,false);
             tempPlayerList.append(tempPlayer);
         }
         else{
-            Player tempPlayer(i,tempBase,true);
+            Player tempPlayer(i,1,tempBase,true);
             tempPlayerList.append(tempPlayer);
         }
     }

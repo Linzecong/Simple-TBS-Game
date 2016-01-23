@@ -21,7 +21,13 @@ public:
     int ATK_Grand;//目前地面攻击力
     int ATK_Sky;//目前对空攻击力
     int DEF;//目前防御力
+
+    int Bonus[3][3];//地形攻击防御加成
+
     int Life;//目前生命值
+    int CurePoint;//每次治疗量
+    int IsCure;//是否治疗
+
     int ATKRange;//目前攻击距离
     int ActionPoint;//目前行动力
     int ViewRange;//目前视野范围
@@ -74,7 +80,7 @@ bool Unit::canMove(){
     return false;
 }
 
-Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),Y(y){
+Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),Y(y),IsCure(0){
     /****************此处定义详细的单位信息****************/
     switch(id){
     case 1:
@@ -89,7 +95,13 @@ Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),
         ATK_Grand=Ori_ATK_Grand=4;//基础数值
         ATK_Sky=Ori_ATK_Sky=3;
         DEF=Ori_DEF=2;
+
+        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+
         Life=Ori_Life=8;
+        CurePoint=1;
         ATKRange=Ori_ATKRange=1;
         ActionPoint=Ori_ActionPoint=3;
         ViewRange=Ori_ViewRange=2;
@@ -108,7 +120,11 @@ Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),
         ATK_Grand=Ori_ATK_Grand=1;//基础数值
         ATK_Sky=Ori_ATK_Sky=5;
         DEF=Ori_DEF=3;
+        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
         Life=Ori_Life=10;
+        CurePoint=1;
         ATKRange=Ori_ATKRange=2;
         ActionPoint=Ori_ActionPoint=2;
         ViewRange=Ori_ViewRange=2;
@@ -127,7 +143,11 @@ Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),
         ATK_Grand=Ori_ATK_Grand=6;//基础数值
         ATK_Sky=Ori_ATK_Sky=1;
         DEF=Ori_DEF=4;
+        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
         Life=Ori_Life=12;
+        CurePoint=1;
         ATKRange=Ori_ATKRange=3;
         ActionPoint=Ori_ActionPoint=5;
         ViewRange=Ori_ViewRange=2;
@@ -146,7 +166,11 @@ Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),
         ATK_Grand=Ori_ATK_Grand=10;//基础数值
         ATK_Sky=Ori_ATK_Sky=1;
         DEF=Ori_DEF=3;
+        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
         Life=Ori_Life=8;
+        CurePoint=1;
         ATKRange=Ori_ATKRange=1;
         ActionPoint=Ori_ActionPoint=7;
         ViewRange=Ori_ViewRange=3;
@@ -165,7 +189,11 @@ Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),
         ATK_Grand=Ori_ATK_Grand=1;//基础数值
         ATK_Sky=Ori_ATK_Sky=8;
         DEF=Ori_DEF=3;
+        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
         Life=Ori_Life=10;
+        CurePoint=1;
         ATKRange=Ori_ATKRange=1;
         ActionPoint=Ori_ActionPoint=8;
         ViewRange=Ori_ViewRange=3;
