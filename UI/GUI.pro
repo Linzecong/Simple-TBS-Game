@@ -31,7 +31,8 @@ HEADERS  += \
     ../Framework/Player.h \
     ../Framework/System.h \
     ../Framework/Technology.h \
-    ../Framework/Unit.h
+    ../Framework/Unit.h \
+    MyListItem.h
 
 FORMS += \
     basewidget.ui \

@@ -25,6 +25,8 @@
 #include"BaseWidget.h"
 #include"DataWidget.h"
 #include"ActionWidget.h"
+#include"MyListItem.h"
+
 
 class BattleWidget : public QWidget{
 private:
@@ -44,7 +46,7 @@ private:
     double Size;//格子大小，全局大小比例
     void paintMap();//绘制地图
     void resetState();//重置状态
-    void resetList();//点击屏幕时，设置单位框框
+    void resetList(QPointF pos);//点击屏幕时，设置单位框框
 
     void click();//当场景被点击时，通过判断状态，实现不同效果
 
@@ -67,6 +69,7 @@ private:
     void zero(){time=0;}//没有长按的话，将按住时间置零
 
     void setView();//设置视野
+
 
 private:
     DataWidget* Data_Widget;//数据框
@@ -97,35 +100,35 @@ public:
     void resizeEvent(QResizeEvent * e){
         View.setGeometry(this->geometry());
     }
-        QTimer UpdateTimer;
-        void updatescene(){
-            for(int i=0;i<=MyMap->Width;i++)
-                for(int j=0;j<=MyMap->Height;j++)
-                    Item[i][j]->changePixmapState();
-            Scene.update();
-        }
+    QTimer UpdateTimer;
+    void updatescene(){
+        for(int i=0;i<=MyMap->Width;i++)
+            for(int j=0;j<=MyMap->Height;j++)
+                Item[i][j]->changePixmapState();
+        Scene.update();
+    }
 };
 
 void BattleWidget::setUpAnimation(QPointF temp){
     ActionWShow = new QPropertyAnimation(Action_Widget, "geometry");
     ActionWShow->setDuration(200);
-    ActionWShow->setStartValue(QRect(temp.x()-40*2*Size,temp.y()-68*Size,0,0));
-    ActionWShow->setEndValue(QRect(temp.x()-40*2*Size,temp.y()-68*Size,40*Size,65*Size));
+    ActionWShow->setStartValue(QRect(temp.x()-65*Size-40*Size,temp.y()-90*Size,0,0));
+    ActionWShow->setEndValue(QRect(temp.x()-65*Size-40*Size,temp.y()-90*Size,65*Size,90*Size));
 
     DataWShow = new QPropertyAnimation(Data_Widget, "geometry");
     DataWShow->setDuration(200);
-    DataWShow->setStartValue(QRect(temp.x()+40*2*Size,temp.y()-68*Size,0,0));
-    DataWShow->setEndValue(QRect(temp.x()+20*2*Size,temp.y()-68*Size,40*Size,65*Size));
+    DataWShow->setStartValue(QRect(temp.x()+65*Size+40*Size,temp.y()-90*Size,0,0));
+    DataWShow->setEndValue(QRect(temp.x()+40*Size,temp.y()-90*Size,65*Size,90*Size));
 
     MyListShow = new QPropertyAnimation(MyUnitList, "geometry");
     MyListShow->setDuration(200);
-    MyListShow->setStartValue(QRect(temp.x()-40*2*Size,temp.y()+35*Size,0,0));
-    MyListShow->setEndValue(QRect(temp.x()-40*2*Size,temp.y()+35*Size,MyUnitList->width(),MyUnitList->height()));
+    MyListShow->setStartValue(QRect(temp.x()-70*Size-20*Size,temp.y()+35*Size,0,0));
+    MyListShow->setEndValue(QRect(temp.x()-70*Size-20*Size,temp.y()+35*Size,70*Size,MyUnitList_P.length()*100));
 
     EnemyListShow = new QPropertyAnimation(EnemyUnitList, "geometry");
     EnemyListShow->setDuration(200);
-    EnemyListShow->setStartValue(QRect(temp.x()+40*2*Size,temp.y()+35*Size,0,0));
-    EnemyListShow->setEndValue(QRect(temp.x()+20*Size,temp.y()+35*Size,EnemyUnitList->width(),EnemyUnitList->height()));
+    EnemyListShow->setStartValue(QRect(temp.x()+70*Size+20*Size,temp.y()+35*Size,0,0));
+    EnemyListShow->setEndValue(QRect(temp.x()+20*Size,temp.y()+35*Size,70*Size,EnemyUnitList_P.length()*100));
 
 }
 
@@ -153,13 +156,13 @@ BattleWidget::BattleWidget(GameSystem a){
     /*在每个基地上方生成3个默认单位*/
     for(int i=1;i<=System.PlayerList.length();i++){
         for(int j=0;j<System.PlayerList[i-1].BaseList.length();j++){
-        Unit abc(1,i,System.PlayerList[i-1].BaseList[j].X,System.PlayerList[i-1].BaseList[j].Y);
-        System.PlayerList[i-1].UnitList.append(abc);
-        System.PlayerList[i-1].UnitList.append(abc);
-        System.PlayerList[i-1].UnitList.append(abc);
-        System.GameMap.GameMap[System.PlayerList[i-1].BaseList[j].X][System.PlayerList[i-1].BaseList[j].Y].NormalUnit.append(&System.PlayerList[i-1].UnitList[0]);
-        System.GameMap.GameMap[System.PlayerList[i-1].BaseList[j].X][System.PlayerList[i-1].BaseList[j].Y].NormalUnit.append(&System.PlayerList[i-1].UnitList[1]);
-        System.GameMap.GameMap[System.PlayerList[i-1].BaseList[j].X][System.PlayerList[i-1].BaseList[j].Y].NormalUnit.append(&System.PlayerList[i-1].UnitList[2]);
+            Unit abc(1,i,System.PlayerList[i-1].BaseList[j].X,System.PlayerList[i-1].BaseList[j].Y);
+            System.PlayerList[i-1].UnitList.append(abc);
+            System.PlayerList[i-1].UnitList.append(abc);
+            System.PlayerList[i-1].UnitList.append(abc);
+            System.GameMap.GameMap[System.PlayerList[i-1].BaseList[j].X][System.PlayerList[i-1].BaseList[j].Y].NormalUnit.append(&System.PlayerList[i-1].UnitList[0]);
+            System.GameMap.GameMap[System.PlayerList[i-1].BaseList[j].X][System.PlayerList[i-1].BaseList[j].Y].NormalUnit.append(&System.PlayerList[i-1].UnitList[1]);
+            System.GameMap.GameMap[System.PlayerList[i-1].BaseList[j].X][System.PlayerList[i-1].BaseList[j].Y].NormalUnit.append(&System.PlayerList[i-1].UnitList[2]);
         }
     }
 
@@ -183,6 +186,11 @@ BattleWidget::BattleWidget(GameSystem a){
     Data_Widget->setVisible(false);
     MyUnitList->setVisible(false);
     EnemyUnitList->setVisible(false);
+    MyUnitList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    MyUnitList->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    EnemyUnitList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    EnemyUnitList->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
 
     connect(MyUnitList,&QListWidget::clicked,this,&BattleWidget::myUnitList_Click);
     connect(EnemyUnitList,&QListWidget::clicked,this,&BattleWidget::enemyUnitList_Click);
@@ -224,7 +232,7 @@ void BattleWidget::paintMap(){
     setView();
 }
 
-void BattleWidget::resetList(){
+void BattleWidget::resetList(QPointF pos){
     MyUnitList->clear();
     EnemyUnitList->clear();
     MyUnitList_P.clear();
@@ -232,44 +240,72 @@ void BattleWidget::resetList(){
 
     for(int i=0;i<CurrentItem->MyGrid->NormalUnit.length();i++){
         if(CurrentItem->MyGrid->NormalUnit[i]->Player==System.Player_Turn->ID){
-            MyUnitList->addItem((CurrentItem->MyGrid->NormalUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->NormalUnit[i]->Player));
+
+            MyListItem* temp=new MyListItem((CurrentItem->MyGrid->NormalUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->NormalUnit[i]->Player));
+            temp->setFixedSize(280,100);
+            QListWidgetItem* item=new QListWidgetItem;
+            item->setSizeHint(temp->size());
+            MyUnitList->addItem(item);
+            MyUnitList->setItemWidget(item,temp);
+
             MyUnitList_P.append(CurrentItem->MyGrid->NormalUnit[i]);
         }
         else{
-            EnemyUnitList->addItem((CurrentItem->MyGrid->NormalUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->NormalUnit[i]->Player));
+            MyListItem* temp=new MyListItem((CurrentItem->MyGrid->NormalUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->NormalUnit[i]->Player));
+            temp->setFixedSize(280,100);
+            QListWidgetItem* item=new QListWidgetItem;
+            item->setSizeHint(temp->size());
+            EnemyUnitList->addItem(item);
+            EnemyUnitList->setItemWidget(item,temp);
+
             EnemyUnitList_P.append(CurrentItem->MyGrid->NormalUnit[i]);
         }
     }
 
     for(int i=0;i<CurrentItem->MyGrid->FlyUnit.length();i++){
         if(CurrentItem->MyGrid->FlyUnit[i]->Player==System.Player_Turn->ID){
-            MyUnitList->addItem((CurrentItem->MyGrid->FlyUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->FlyUnit[i]->Player));
+            MyListItem* temp=new MyListItem((CurrentItem->MyGrid->FlyUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->FlyUnit[i]->Player));
+            temp->setFixedSize(280,100);
+            QListWidgetItem* item=new QListWidgetItem;
+            item->setSizeHint(temp->size());
+            MyUnitList->addItem(item);
+            MyUnitList->setItemWidget(item,temp);
+
+
             MyUnitList_P.append(CurrentItem->MyGrid->FlyUnit[i]);
         }
         else{
-            EnemyUnitList->addItem((CurrentItem->MyGrid->FlyUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->FlyUnit[i]->Player));
+            MyListItem* temp=new MyListItem((CurrentItem->MyGrid->FlyUnit[i]->Name)+":"+QString::number(CurrentItem->MyGrid->FlyUnit[i]->Player));
+            temp->setFixedSize(280,100);
+            QListWidgetItem* item=new QListWidgetItem;
+            item->setSizeHint(temp->size());
+            EnemyUnitList->addItem(item);
+            EnemyUnitList->setItemWidget(item,temp);
+
             EnemyUnitList_P.append(CurrentItem->MyGrid->FlyUnit[i]);
         }
     }
 
-    if(State!=ATTACK)
-    if(MyUnitList_P.isEmpty()){
-        Action_Widget->setVisible(false);
-        MyUnitList->setVisible(false);
-        Data_Widget->setVisible(false);
+    setUpAnimation(pos);
 
-    }
-    else{
-        CurrentUnit=MyUnitList_P[0];
-        Data_Widget->setData(CurrentUnit);
-        Action_Widget->setData(CurrentUnit,System.Player_Turn->ID);
-        Action_Widget->setVisible(true);
-        Data_Widget->setVisible(true);
-        MyUnitList->setVisible(true);
-        ActionWShow->start();
-        DataWShow->start();
-        MyListShow->start();
-    }
+    if(State!=ATTACK)
+        if(MyUnitList_P.isEmpty()){
+            Action_Widget->setVisible(false);
+            MyUnitList->setVisible(false);
+            Data_Widget->setVisible(false);
+
+        }
+        else{
+            CurrentUnit=MyUnitList_P[0];
+            Data_Widget->setData(CurrentUnit);
+            Action_Widget->setData(CurrentUnit,System.Player_Turn->ID);
+            Action_Widget->setVisible(true);
+            Data_Widget->setVisible(true);
+            MyUnitList->setVisible(true);
+            ActionWShow->start();
+            DataWShow->start();
+            MyListShow->start();
+        }
 
     if(EnemyUnitList_P.isEmpty()){
         EnemyUnitList->setVisible(false);
@@ -279,7 +315,7 @@ void BattleWidget::resetList(){
         EnemyListShow->start();
         if(!Data_Widget->isVisible()){
             if(State!=ATTACK)
-            CurrentUnit=EnemyUnitList_P[0];
+                CurrentUnit=EnemyUnitList_P[0];
             Data_Widget->setData(EnemyUnitList_P[0]);
             Data_Widget->setVisible(true);
             DataWShow->start();
@@ -293,7 +329,7 @@ void BattleWidget::click(){
             for(int j=0;j<=MyMap->Height;j++)
                 if(Item[i][j]->IsHover==true){
                     CurrentItem=Item[i][j];
-                    setUpAnimation(CurrentItem->scenePos());
+
                     if(Item[i][j]->IsSeen==0){
                         MyUnitList->setVisible(false);
                         EnemyUnitList->setVisible(false);
@@ -301,7 +337,8 @@ void BattleWidget::click(){
                         Action_Widget->setVisible(false);
                         return;
                     }
-                    resetList();
+                    resetList(CurrentItem->scenePos());
+
                 }
     }
 
@@ -314,8 +351,8 @@ void BattleWidget::click(){
                     System.moveTo(i,j,CurrentUnit);
                     CurrentUnit->ActionPoint-=DataMap->GameMap[i][j].Data;
                     CurrentItem=Item[i][j];
-                    setUpAnimation(CurrentItem->scenePos());
-                    resetList();
+                    resetList(CurrentItem->scenePos());
+
                     State=CHOOSEGRID;
                     for(int i=0;i<=MyMap->Width;i++)
                         for(int j=0;j<=MyMap->Height;j++){
@@ -333,7 +370,7 @@ void BattleWidget::click(){
                     if(Item[i][j]->ATKMode==0)
                         return;
                     CurrentItem=Item[i][j];
-                    resetList();
+                    resetList(CurrentItem->scenePos());
                 }
     }
 }

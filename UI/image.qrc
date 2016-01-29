@@ -15,5 +15,11 @@
         <file>state/range1.png</file>
         <file>unit/1_1_1.png</file>
         <file>unit/1_2_1.png</file>
+        <file>state/attack2.png</file>
+        <file>state/attack3.png</file>
+        <file>state/hover2.png</file>
+        <file>state/hover3.png</file>
+        <file>state/range2.png</file>
+        <file>state/range3.png</file>
     </qresource>
 </RCC>

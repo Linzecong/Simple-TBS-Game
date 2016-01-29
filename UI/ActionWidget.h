@@ -23,12 +23,14 @@ public:
 
 ActionWidget::ActionWidget(double Size){
     Attack=new QPushButton("攻击",this);
+    Attack->setStyleSheet("background:url(:pixmap/grass/seen.png)");
     Move=new QPushButton("移动",this);
+    Move->setStyleSheet("background:url(:pixmap/grass/seen.png)");
     Cure=new QPushButton("治疗",this);
 
-    Attack->setGeometry(0,0,40*Size,65*Size/3);
-    Move->setGeometry(0,65*Size/3,40*Size,65*Size/3);
-    Cure->setGeometry(0,65*Size/3*2,40*Size,65*Size/3);
+    Attack->setGeometry(0,0,65*Size,90*Size/3);
+    Move->setGeometry(0,90*Size/3,65*Size,90*Size/3);
+    Cure->setGeometry(0,90*Size/3*2,65*Size,90*Size/3);
 
     Attack->setEnabled(false);
     Move->setEnabled(false);
