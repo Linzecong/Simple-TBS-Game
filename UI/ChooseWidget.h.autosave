@@ -23,8 +23,13 @@ public:
     QList<QList<MyItem*> > item;
     ChooseWidget();
     ~ChooseWidget();
+    
     void setView();//查看地图
-    void showField();//显示战斗窗口
+    void PreviousClick();
+    void NextClick();
+    void showRace();//显示种族选择窗口
+    
+    int CurrentMap;
 
 private:
     Ui::ChooseWidget *ui;
@@ -34,10 +39,13 @@ private:
 ChooseWidget::ChooseWidget():ui(new Ui::ChooseWidget){
     ui->setupUi(this);
     ui->graphicsView->setScene(&myscene);
-    connect(ui->comboBox,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),this,&ChooseWidget::setView);
-    connect(ui->pushButton,&QPushButton::clicked,this,&ChooseWidget::showField);
+    connect(ui->Previous,&QPushButton::clicked,this,&ChooseWidget::PreviousClick);
+    connect(ui->Next,&QPushButton::clicked,this,&ChooseWidget::NextClick);
+    
+    connect(ui->GoOn,&QPushButton::clicked,this,&ChooseWidget::showRace);
     //ui->graphicsView->setViewport(new QGLWidget);
-    Size=1;
+    Size=4;
+    CurrentMap=0;
     setView();
 }
 
@@ -46,10 +54,13 @@ ChooseWidget::~ChooseWidget(){
 }
 
 void ChooseWidget::setView(){
-    int index=ui->comboBox->currentIndex();
+    int index=CurrentMap;
     myscene.clear();
     item.clear();
     mymap= new Map(index+1);
+    ui->MaxPlayer->setText(QString::number(mymap->PlayerCount));
+    ui->PlayerCount->setRange(1,mymap->PlayerCount);
+    
     MyItem* temp;
     for(int i=0;i<=mymap->Width;i++){
         QList<MyItem*> templist;
@@ -69,7 +80,21 @@ void ChooseWidget::setView(){
         }
 }
 
-void ChooseWidget::showField(){
+void ChooseWidget::PreviousClick(){
+    CurrentMap--;
+    if(CurrentMap==-1)
+        CurrentMap=1;
+    setView();
+}
+
+void ChooseWidget::NextClick(){
+    CurrentMap++;
+    if(CurrentMap==1)
+        CurrentMap=0;
+    setView();
+}
+
+void ChooseWidget::showRace(){
     int index=ui->comboBox->currentIndex()+1;
     int race=ui->comboBox_2->currentIndex()+1;
     Map tempMap(index);

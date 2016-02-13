@@ -26,10 +26,12 @@ DataWidget::DataWidget(double Size){
     Life.setParent(this);
     ActionPoint.setParent(this);
 
-    ATK.setGeometry(0,0,40*Size,65*Size/4);
-    DEF.setGeometry(0,65*Size/4,40*Size,65*Size/4);
-    Life.setGeometry(0,65*Size/4*2,40*Size,65*Size/4);
-    ActionPoint.setGeometry(0,65*Size/4*3,40*Size,65*Size/4);
+        ATK.setGeometry(0,0,50*Size,65*Size/4);
+        DEF.setGeometry(0,65*Size/4,50*Size,65*Size/4);
+        Life.setGeometry(0,65*Size/4*2,50*Size,65*Size/4);
+        ActionPoint.setGeometry(0,65*Size/4*3,50*Size,65*Size/4);
+
+    this->setStyleSheet("color: rgb(255, 255, 255);background-color: rgb(100, 75, 46);");
 
 }
 

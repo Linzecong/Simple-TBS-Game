@@ -36,35 +36,35 @@ Player::Player(int id, int race, QList<Base> baselist, int ai):IsAI(ai),ID(id),R
 
     /*********此处初始化玩家科技和各种数值***************/
     switch(Race){
-    case 1:
-        StudiedList.append(0);
-        CanStudyList.append(1);
-        CanTrainList.append(1);
-        Coin=50;
-        Capacity=Ori_Capacity=5;
+    case 1://人类
+        StudiedList.append(100);
+        CanStudyList.append(101);
+        CanTrainList.append(101);
+        Coin=100;
+        Capacity=50;Ori_Capacity=10;
         break;
-    case 2:
-        StudiedList.append(0);
-        CanStudyList.append(1);
-        CanTrainList.append(1);
-        Coin=50;
-        Capacity=Ori_Capacity=5;
+    case 2://恶魔
+        StudiedList.append(200);
+        CanStudyList.append(201);
+        CanTrainList.append(201);
+        Coin=100;
+        Capacity=50;Ori_Capacity=10;
         break;
-    case 3:
-        StudiedList.append(0);
-        CanStudyList.append(1);
-        CanTrainList.append(1);
-        Coin=50;
-        Capacity=Ori_Capacity=5;
+    case 3://天使
+        StudiedList.append(300);
+        CanStudyList.append(301);
+        CanTrainList.append(301);
+        Coin=100;
+        Capacity=50;Ori_Capacity=10;
         break;
-    case 4:
-        StudiedList.append(0);
-        CanStudyList.append(1);
-        CanTrainList.append(1);
-        Coin=50;
-        Capacity=Ori_Capacity=5;
+    case 0://随机
+        Race=1;
+        StudiedList.append(100);
+        CanStudyList.append(101);
+        CanTrainList.append(101);
+        Coin=100;
+        Capacity=50;Ori_Capacity=10;
         break;
-
     }
 
 
@@ -77,31 +77,161 @@ void Player::study(int tech){
 
     /*********此处为学习科技后获得的效果*************/
     switch(tech) {
-    case 0:
-        CanTrainList.append(1);
-        CanStudyList.append(1);
+    case 101:
+        CanTrainList.append(102);
+        CanStudyList.append(102);
+        CanStudyList.append(103);
         break;
-    case 1:
-        CanTrainList.append(2);
-        CanStudyList.append(2);
+    case 102:
+        Capacity+=5*BaseList.length();
         break;
-    case 2:
-        CanTrainList.append(3);
-        CanTrainList.append(4);
-        CanStudyList.append(3);
+    case 103:
+        Capacity+=5*BaseList.length();
+        CanStudyList.append(104);
         break;
-    case 3:
-        CanTrainList.append(5);
-        CanStudyList.append(4);
+    case 104:
+        CanTrainList.append(103);
+        CanStudyList.append(105);
+
         break;
-    case 4:
-        Capacity+=10;
+    case 105:
+        CanTrainList.append(104);
+        CanStudyList.append(106);
+        break;
+    case 106:
+        for(int i=0;i<UnitList.length();i++)
+            UnitList[i].Life=UnitList[i].Ori_Life;
+        CanStudyList.append(107);
+        break;
+    case 107:
+        CanTrainList.append(105);
+        Capacity+=20*BaseList.length();
+        CanStudyList.append(108);
+        break;
+    case 108:
+        CanTrainList.append(106);
+        Capacity+=20*BaseList.length();
+        CanStudyList.append(109);
+        break;
+    case 109:
+        Capacity+=50*BaseList.length();
+        CanStudyList.append(110);
+        break;
+    case 110:
+        CanTrainList.append(107);
+        for(int i=0;i<UnitList.length();i++)
+            UnitList[i].DEF++;
+        break;
+
+
+
+    case 201:
+        CanTrainList.append(202);
+        CanStudyList.append(202);
+        CanStudyList.append(203);
+        break;
+    case 202:
+        for(int i=0;i<UnitList.length();i++)
+            if(UnitList[i].ID==201){
+                UnitList[i].DEF--;
+                UnitList[i].Ori_ATK_Grand++;
+            }
+        break;
+    case 203:
+        Capacity+=10*BaseList.length();
+        CanStudyList.append(204);
+        break;
+    case 204:
+        CanTrainList.append(203);
+        CanStudyList.append(205);
+
+        break;
+    case 205:
+        CanTrainList.append(204);
+        CanStudyList.append(206);
+        break;
+    case 206:
+        for(int i=0;i<UnitList.length();i++)
+            if(UnitList[i].ID==203)
+            UnitList[i].ATKRange++;
+        CanStudyList.append(207);
+        break;
+    case 207:
+        CanTrainList.append(205);
+        Capacity+=20*BaseList.length();
+        CanStudyList.append(208);
+        break;
+    case 208:
+        CanTrainList.append(206);
+        Capacity+=20*BaseList.length();
+        CanStudyList.append(209);
+        break;
+    case 209:
+        Capacity+=40*BaseList.length();
+        CanStudyList.append(210);
+        break;
+    case 210:
+        CanTrainList.append(207);
+        for(int i=0;i<UnitList.length();i++)
+            UnitList[i].Life==UnitList[i].Ori_Life;
+        break;
+
+
+    case 301:
+        CanTrainList.append(302);
+        CanStudyList.append(302);
+        CanStudyList.append(303);
+        break;
+    case 302:
+        for(int i=0;i<UnitList.length();i++)
+            UnitList[i].Ori_ATK_Grand++;
+        break;
+    case 303:
+        Capacity+=10*BaseList.length();
+        CanStudyList.append(304);
+        break;
+    case 304:
+        CanTrainList.append(303);
+        CanStudyList.append(305);
+
+        break;
+    case 305:
+        CanTrainList.append(304);
+        CanStudyList.append(306);
+        break;
+    case 306:
+        for(int i=0;i<UnitList.length();i++)
+            UnitList[i].Life=UnitList[i].Ori_Life;
+        CanStudyList.append(307);
+        break;
+    case 307:
+        CanTrainList.append(305);
+        Capacity+=20*BaseList.length();
+        CanStudyList.append(308);
+        break;
+    case 308:
+        CanTrainList.append(306);
+        Capacity+=30*BaseList.length();
+        CanStudyList.append(309);
+        break;
+    case 309:
+        Capacity+=40*BaseList.length();
+        for(int i=0;i<UnitList.length();i++)
+            UnitList[i].Life=UnitList[i].Ori_Life;
+        CanStudyList.append(310);
+        break;
+    case 310:
+        CanTrainList.append(307);
+        Capacity+=80*BaseList.length();
         break;
     }
 }
 
 Unit Player::train(int id,Base base){
     Unit temp(id,ID,base.X,base.Y);
+    temp.ActionPoint=0;
+    temp.IsATKed=1;
+    temp.IsCure=1;
     Coin-=temp.Cost;
     this->UnitList.append(temp);
     return temp;

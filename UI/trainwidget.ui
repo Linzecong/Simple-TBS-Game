@@ -6,14 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>301</width>
-    <height>577</height>
+    <width>284</width>
+    <height>588</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <property name="styleSheet">
+   <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(97, 75, 46);</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <widget class="QLabel" name="label_3">
      <property name="font">
@@ -24,206 +28,355 @@
      <property name="text">
       <string>可训练列表</string>
      </property>
-    </widget>
-   </item>
-   <item row="1" column="0" rowspan="14">
-    <widget class="QListWidget" name="CanTrainList"/>
-   </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QLabel" name="Des">
-     <property name="text">
-      <string>介绍：</string>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="label_8">
-     <property name="text">
-      <string>维护费：</string>
+   <item row="1" column="0" colspan="3">
+    <widget class="QListWidget" name="CanTrainList">
+     <property name="flow">
+      <enum>QListView::LeftToRight</enum>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="MaintenanceCost">
-     <property name="text">
-      <string/>
+   <item row="2" column="0" colspan="3">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="Des">
+       <property name="text">
+        <string>介绍：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>花费：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Cost">
+         <property name="text">
+          <string>   </string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>维护费：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="MaintenanceCost">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>单位类型：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="UnitType">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>攻击类型：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ATKType">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>对空攻击力：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ATK_Sky">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>对地攻击力：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ATK_Grand">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QLabel" name="label_20">
+         <property name="text">
+          <string>防御力：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="DEF">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <item>
+        <widget class="QLabel" name="label_22">
+         <property name="text">
+          <string>生命力：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Life">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_10">
+       <item>
+        <widget class="QLabel" name="label_26">
+         <property name="text">
+          <string>行动力：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ActionPoint">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_9">
+       <item>
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>攻击距离：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ATKRange">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <item>
+        <widget class="QLabel" name="label_28">
+         <property name="text">
+          <string>视野范围：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ViewRange">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="6" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_12">
+       <item>
+        <widget class="QLabel" name="label_30">
+         <property name="text">
+          <string>移动后攻击：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="MoveAfterATK">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="6" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <item>
+        <widget class="QLabel" name="label_32">
+         <property name="text">
+          <string>攻击后移动：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ATKAfterMove">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-    </widget>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>100</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item row="3" column="1">
-    <widget class="QLabel" name="label_10">
+    <widget class="QLabel" name="Bonus">
+     <property name="acceptDrops">
+      <bool>false</bool>
+     </property>
      <property name="text">
-      <string>花费：</string>
+      <string>加成表：</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
    <item row="3" column="2">
-    <widget class="QLabel" name="Cost">
-     <property name="text">
-      <string/>
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-    </widget>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>100</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
-   <item row="4" column="1">
-    <widget class="QLabel" name="label_12">
-     <property name="text">
-      <string>攻击类型：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="2">
-    <widget class="QLabel" name="ATKType">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QLabel" name="label_14">
-     <property name="text">
-      <string>单位类型：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QLabel" name="UnitType">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QLabel" name="label_16">
-     <property name="text">
-      <string>对空攻击力：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="2">
-    <widget class="QLabel" name="ATK_Sky">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QLabel" name="label_17">
-     <property name="text">
-      <string>对地攻击力：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="2">
-    <widget class="QLabel" name="ATK_Grand">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QLabel" name="label_20">
-     <property name="text">
-      <string>防御力：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="2">
-    <widget class="QLabel" name="DEF">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QLabel" name="label_22">
-     <property name="text">
-      <string>生命力：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="2">
-    <widget class="QLabel" name="Life">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
-    <widget class="QLabel" name="label_24">
-     <property name="text">
-      <string>攻击距离：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="2">
-    <widget class="QLabel" name="ATKRange">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="1">
-    <widget class="QLabel" name="label_26">
-     <property name="text">
-      <string>行动力：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="2">
-    <widget class="QLabel" name="ActionPoint">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="1">
-    <widget class="QLabel" name="label_28">
-     <property name="text">
-      <string>视野范围：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="2">
-    <widget class="QLabel" name="ViewRange">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="1">
-    <widget class="QLabel" name="label_30">
-     <property name="text">
-      <string>移动后攻击：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="2">
-    <widget class="QLabel" name="MoveAfterATK">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="1">
-    <widget class="QLabel" name="label_32">
-     <property name="text">
-      <string>攻击后移动：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="2">
-    <widget class="QLabel" name="ATKAfterMove">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="0" colspan="3">
-    <widget class="QPushButton" name="TrainButton">
-     <property name="text">
-      <string>训练</string>
-     </property>
-    </widget>
+   <item row="4" column="0" colspan="3">
+    <layout class="QHBoxLayout" name="horizontalLayout_14">
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>100</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="TrainButton">
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+background: transparent;
+border-image:url(:/pixmap/button/button1.png);
+color:white;
+}
+QPushButton:pressed{
+background: transparent;
+border-image:url(:/pixmap/button/button2.png);
+color:white;
+}
+QPushButton:disabled{
+background: transparent;
+border-image:url(:/pixmap/button/button3.png);
+color:grey;
+}</string>
+       </property>
+       <property name="text">
+        <string>训练</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>100</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

@@ -21,6 +21,7 @@ public:
 public:
     Grid();
     Grid(GRIDTYPE type);//初始化
+    Grid(GRIDTYPE type,Base* base);
     ~Grid();
 
     void setType(GRIDTYPE type);//设置格子类型
@@ -29,8 +30,14 @@ public:
 
 Grid::Grid():Construction(NULL),Cost(1),X(0),Y(0),Data(0),Type(GRASS){}
 
-Grid::Grid(Grid::GRIDTYPE type):Construction(NULL),X(0),Y(0),Data(0){
+Grid::Grid(Grid::GRIDTYPE type):Construction(NULL),X(0),Y(0),Data(0){setType(type);}
+
+Grid::Grid(Grid::GRIDTYPE type, Base *base){
     setType(type);
+    Data=0;
+    Construction=base;
+    X=base->X;
+    Y=base->Y;
 }
 
 Grid::~Grid(){}
@@ -38,13 +45,13 @@ Grid::~Grid(){}
 void Grid::setType(Grid::GRIDTYPE type){
     switch(type){
     case GRASS:
-        Cost=1;
-        break;
-    case SAND:
         Cost=2;
         break;
-    case FOREST:
+    case SAND:
         Cost=3;
+        break;
+    case FOREST:
+        Cost=5;
         break;
     case HILL:
         Cost=20;

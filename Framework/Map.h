@@ -26,7 +26,7 @@ public:
     Map(){}
     ~Map(){}
 public:
-    Map* findWay(int x,int y);//寻路
+    Map* findWay(int x, int y, int playerid);//寻路
     static Map* findViewOrATKRange(int mapx,int mapy,int x,int y);//视野和攻击距离用
 
 private:
@@ -238,8 +238,21 @@ void Map::markrd(int x, int y){
     }
 }
 
-Map *Map::findWay(int x, int y){
+Map *Map::findWay(int x, int y,int playerid){
     Map* map=new Map(*this);
+
+    for(int i=0;i<=map->Width;i++)
+        for(int j=0;j<=map->Height;j++)
+            if(!map->GameMap[i][j].NormalUnit.isEmpty()){
+                if(map->GameMap[i][j].NormalUnit[0]->Player!=playerid)
+                   map->GameMap[i][j].Cost+=(map->GameMap[i][j].NormalUnit.length())*2;
+            }
+            else
+                if(!map->GameMap[i][j].FlyUnit.isEmpty())
+                    if(map->GameMap[i][j].FlyUnit[0]->Player!=playerid)
+                   map->GameMap[i][j].Cost+=(map->GameMap[i][j].FlyUnit.length())*2;
+
+
     Map* mapmark=new Map(*this);
     QQueue<Grid> a;
     Grid abc=map->grid(x,y);
@@ -351,13 +364,13 @@ Map::Map(int id){
         /*此处定义大小*/
         Width=8;
         Height=4;
-        Name="双人对战";
+        Name="庇护所";
         Des="双人对战地图！！";
         for(int i=0;i<=Width;i++){
             QList<Grid> abc;
             GameMap.append(abc);
             for(int j=0;j<=Height;j++){
-                Grid temp;
+                Grid temp(Grid::GRASS);
                 GameMap[i].append(temp);
                 GameMap[i][j].X=i;
                 GameMap[i][j].Y=j;
@@ -365,19 +378,15 @@ Map::Map(int id){
         }
 
         /*此处定义基地位置*/
-        Grid* Base1=new Grid(Grid::GRASS);
-        Base1->X=0;
-        Base1->Y=2;
-        Base1->Construction=new Base(0,2,1);
 
-        Grid* Base2=new Grid(Grid::GRASS);
-        Base2->X=8;
-        Base2->Y=2;
-        Base2->Construction=new Base(8,2,2);
+        GameMap[0][2]=Grid(Grid::GRASS,new Base(0,2,1));
+        GameMap[1][0]=Grid(Grid::GRASS,new Base(1,0,1));
+        GameMap[1][3]=Grid(Grid::GRASS,new Base(1,3,1));
 
-        GameMap[0][2]=*Base1;
-        GameMap[8][2]=*Base2;
 
+        GameMap[8][2]=Grid(Grid::GRASS,new Base(8,2,2));
+        GameMap[7][0]=Grid(Grid::GRASS,new Base(7,0,2));
+        GameMap[7][3]=Grid(Grid::GRASS,new Base(7,3,2));
         /*此处定义格子类型*/
         GameMap[0][0].setType(Grid::SAND);
         GameMap[0][1].setType(Grid::SAND);
@@ -395,58 +404,44 @@ Map::Map(int id){
         GameMap[1][1].setType(Grid::SAND);
 
         GameMap[6][3].setType(Grid::FOREST);
-        GameMap[6][4].setType(Grid::FOREST);
+        GameMap[6][4].setType(Grid::GRASS);
         GameMap[2][3].setType(Grid::FOREST);
-        GameMap[2][4].setType(Grid::FOREST);
+        GameMap[2][4].setType(Grid::GRASS);
 
+        GameMap[4][0].setType(Grid::FOREST);
+        GameMap[4][1].setType(Grid::FOREST);
         GameMap[4][2].setType(Grid::SAND);
-        GameMap[4][3].setType(Grid::SAND);
+        GameMap[4][3].setType(Grid::FOREST);
 
-        GameMap[4][0].setType(Grid::HILL);
+        GameMap[3][4].setType(Grid::SAND);
+        GameMap[4][4].setType(Grid::FOREST);
+        GameMap[5][4].setType(Grid::SAND);
     }
 
     if(id==2){
         PlayerCount=4;
         Width=6;
         Height=6;
-        Name="四人对战";
+        Name="战地";
         Des="四人对战地图！！";
 
         for(int i=0;i<7;i++){
             QList<Grid> abc;
             GameMap.append(abc);
             for(int j=0;j<7;j++){
-                Grid temp;
+                Grid temp(Grid::GRASS);
                 GameMap[i].append(temp);
                 GameMap[i][j].X=i;
                 GameMap[i][j].Y=j;
             }
         }
 
-        Grid* Base1=new Grid(Grid::HILL);
-        Base1->X=1;
-        Base1->Y=1;
-        Base1->Construction=new Base(1,1,1);
 
-        Grid* Base2=new Grid(Grid::HILL);
-        Base2->X=5;
-        Base2->Y=1;
-        Base2->Construction=new Base(5,1,2);
 
-        Grid* Base3=new Grid(Grid::HILL);
-        Base3->X=1;
-        Base3->Y=5;
-        Base3->Construction=new Base(1,5,3);
-
-        Grid* Base4=new Grid(Grid::HILL);
-        Base4->X=5;
-        Base4->Y=5;
-        Base4->Construction=new Base(5,5,4);
-
-        GameMap[1][1]=*Base1;
-        GameMap[5][1]=*Base2;
-        GameMap[1][5]=*Base3;
-        GameMap[5][5]=*Base4;
+        GameMap[1][1]=Grid(Grid::SAND,new Base(1,1,1));
+        GameMap[5][1]=Grid(Grid::SAND,new Base(5,1,2));
+        GameMap[1][5]=Grid(Grid::SAND,new Base(1,5,3));
+        GameMap[5][5]=Grid(Grid::SAND,new Base(5,5,4));
 
         GameMap[0][0].setType(Grid::SAND);
         GameMap[0][1].setType(Grid::SAND);

@@ -7,8 +7,10 @@
 #include<QMessageBox>
 #include <QPropertyAnimation>
 #include "../Framework/Player.h"
+#include "../Framework/System.h"
 #include "StudyWidget.h"
 #include "TrainWidget.h"
+
 
 namespace Ui {
 class BaseWidget;
@@ -18,12 +20,13 @@ class BaseWidget : public QDialog{
 public:
     Player* Me;
 public:
-    BaseWidget(Player* a);
+    BaseWidget(Player* a,GameSystem* system);
     ~BaseWidget();
 
     Unit NewUnit;//用于判断是否有新单位
     int HasNewUnit;
     bool IsEnd;
+    GameSystem* System;
 
     void mousePressEvent(QMouseEvent *e){}//重写pressevent，实现禁止拖动屏幕
 
@@ -47,9 +50,12 @@ private:
         ActionWShow->start(QAbstractAnimation::DeleteWhenStopped);
         connect(ActionWShow, SIGNAL(finished()), this, SLOT(close()));
     }
+
+    bool check();
 };
 
-BaseWidget::BaseWidget(Player *a):ui(new Ui::BaseWidget){
+BaseWidget::BaseWidget(Player *a, GameSystem *system):ui(new Ui::BaseWidget){
+    System=system;
     ui->setupUi(this);
     Me=a;
     HasNewUnit=-1;
@@ -61,7 +67,7 @@ BaseWidget::BaseWidget(Player *a):ui(new Ui::BaseWidget){
         cost+=Me->UnitList[i].MaintenanceCost;
     ui->Coin->setText(QString::number(Me->Coin)+"(-"+QString::number(cost)+")");
 
-    ui->Capacity->setText(QString::number(Me->Capacity));
+    ui->Capacity->setText(QString::number(Me->Capacity)+"(+"+QString::number(Me->Ori_Capacity)+"*"+QString::number(Me->BaseList.length())+")");
 
     for(int i=0;i<Me->BaseList.length();i++)
         ui->BaseList->addItem("基地"+QString::number(i+1));
@@ -78,8 +84,18 @@ BaseWidget::BaseWidget(Player *a):ui(new Ui::BaseWidget){
 
     ui->StudyButton->setEnabled(false);
     ui->TrainUnitButton->setEnabled(false);
-}
 
+    int H=QApplication::desktop()->height();
+    int W=QApplication::desktop()->width();
+
+    ui->StudyButton->setFixedSize(W/4,H/16);
+   ui->TrainUnitButton->setFixedSize(W/4,H/16);
+   ui->EndButton->setFixedSize(W/4,H/16);
+   ui->CancelButton->setFixedSize(W/4,H/16);
+    ui->HelpButton->setFixedSize(W/4,H/16);
+
+
+}
 BaseWidget::~BaseWidget(){
     delete ui;
 }
@@ -110,6 +126,15 @@ void BaseWidget::Train_Click(){
         NewUnit=train->Choose;
         ui->UnitList->addItem((NewUnit.Name)+"  行动力："+QString::number(NewUnit.ActionPoint)+"  生命力："+QString::number(NewUnit.Life));
         HasNewUnit=(NewUnit.UnitType==Unit::NORMAL?0:1);
+
+
+        if(HasNewUnit>=0){
+            if(HasNewUnit==0)
+                System->GameMap.GameMap[NewUnit.X][NewUnit.Y].NormalUnit.append(&System->Player_Turn->UnitList[System->Player_Turn->UnitList.length()-1]);
+            else{
+                System->GameMap.GameMap[NewUnit.X][NewUnit.Y].FlyUnit.append(&System->Player_Turn->UnitList[System->Player_Turn->UnitList.length()-1]);
+            }
+        }
     }
 
     int cost=0;
@@ -121,13 +146,30 @@ void BaseWidget::Train_Click(){
 
 void BaseWidget::Base_Click(){
     if(Me->BaseList[ui->BaseList->currentRow()].IsUsed==0){
-        ui->StudyButton->setEnabled(true);
+        if(check())
         ui->TrainUnitButton->setEnabled(true);
+        else
+        ui->TrainUnitButton->setEnabled(false);
+        ui->StudyButton->setEnabled(true);
     }
     else{
         ui->StudyButton->setEnabled(false);
         ui->TrainUnitButton->setEnabled(false);
     }
+
+}
+
+bool BaseWidget::check(){
+    int BX=Me->BaseList[ui->BaseList->currentRow()].X;
+    int BY=Me->BaseList[ui->BaseList->currentRow()].Y;
+    int sum=0;
+    for(int i=0;i<Me->UnitList.length();i++)
+        if(Me->UnitList[i].X==BX&&Me->UnitList[i].Y==BY)
+            sum++;
+    if(sum>=3)
+        return false;
+    else
+        return true;
 }
 
 #endif // BASEWIDGET_H

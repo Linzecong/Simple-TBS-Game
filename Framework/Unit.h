@@ -20,6 +20,7 @@ public:
 
     int ATK_Grand;//目前地面攻击力
     int ATK_Sky;//目前对空攻击力
+    int ATK_Base;//基地攻击力
     int DEF;//目前防御力
 
     int Bonus[3][3];//地形攻击防御加成
@@ -80,125 +81,502 @@ bool Unit::canMove(){
     return false;
 }
 
-Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),Y(y),IsCure(0){
+Unit::Unit(int id=1, int player=0, int x=0, int y=0):ID(id),Player(player),X(x),Y(y),IsCure(0),IsATKed(false){
     /****************此处定义详细的单位信息****************/
     switch(id){
-    case 1:
-        MaintenanceCost=1;
-        Cost=10;
-        Name="机枪兵";
+    case 101:
+        MaintenanceCost=2;
+        Cost=20;
+        Name="步兵";
         Des="这是一个机枪兵";
-        ATKType=BOTH;//攻击类型（对空对地）
+        ATKType=GRAND;//攻击类型（对空对地）
         UnitType=NORMAL;//单位类型
         ATKAfterMove=true;//是否可以移动后攻击
         MoveAfterATK=false;//是否可以攻击后移动
-        ATK_Grand=Ori_ATK_Grand=4;//基础数值
-        ATK_Sky=Ori_ATK_Sky=3;
+        ATK_Grand=Ori_ATK_Grand=5;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=2;
         DEF=Ori_DEF=2;
 
-        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
         Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
-        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=1;
 
-        Life=Ori_Life=8;
+        Life=Ori_Life=5;
         CurePoint=1;
         ATKRange=Ori_ATKRange=1;
-        ActionPoint=Ori_ActionPoint=3;
+        ActionPoint=Ori_ActionPoint=5;
         ViewRange=Ori_ViewRange=2;
         ATKAble=true;
-        IsATKed=false;
         break;
-    case 2:
-        MaintenanceCost=2;
-        Cost=20;
-        Name="防空兵";
+    case 102:
+        MaintenanceCost=5;
+        Cost=40;
+        Name="火箭兵";
         Des="这是一个防空兵";
-        ATKType=SKY;//攻击类型（对空对地）
+        ATKType=BOTH;//攻击类型（对空对地）
         UnitType=NORMAL;//单位类型
         ATKAfterMove=false;//是否可以移动后攻击
         MoveAfterATK=false;//是否可以攻击后移动
-        ATK_Grand=Ori_ATK_Grand=1;//基础数值
-        ATK_Sky=Ori_ATK_Sky=5;
-        DEF=Ori_DEF=3;
-        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        ATK_Grand=Ori_ATK_Grand=5;//基础数值
+        ATK_Sky=Ori_ATK_Sky=3;
+        ATK_Base=4;
+        DEF=Ori_DEF=1;
+        Bonus[0][0]=0;Bonus[0][1]=1;Bonus[0][2]=0;
         Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
         Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
-        Life=Ori_Life=10;
+        Life=Ori_Life=5;
         CurePoint=1;
         ATKRange=Ori_ATKRange=2;
-        ActionPoint=Ori_ActionPoint=2;
+        ActionPoint=Ori_ActionPoint=4;
         ViewRange=Ori_ViewRange=2;
         ATKAble=true;
-        IsATKed=false;
         break;
-    case 3:
-        MaintenanceCost=5;
-        Cost=50;
-        Name="坦克";
+    case 103:
+        MaintenanceCost=12;
+        Cost=80;
+        Name="机甲战士";
         Des="这是坦克";
         ATKType=GRAND;//攻击类型（对空对地）
         UnitType=NORMAL;//单位类型
         ATKAfterMove=true;//是否可以移动后攻击
-        MoveAfterATK=true;//是否可以攻击后移动
+        MoveAfterATK=false;//是否可以攻击后移动
         ATK_Grand=Ori_ATK_Grand=6;//基础数值
-        ATK_Sky=Ori_ATK_Sky=1;
-        DEF=Ori_DEF=4;
-        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
-        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
-        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
-        Life=Ori_Life=12;
-        CurePoint=1;
-        ATKRange=Ori_ATKRange=3;
-        ActionPoint=Ori_ActionPoint=5;
-        ViewRange=Ori_ViewRange=2;
-        ATKAble=true;
-        IsATKed=false;
-        break;
-    case 4:
-        MaintenanceCost=5;
-        Cost=50;
-        Name="轰炸机";
-        Des="这是轰炸机";
-        ATKType=GRAND;//攻击类型（对空对地）
-        UnitType=FLY;//单位类型
-        ATKAfterMove=true;//是否可以移动后攻击
-        MoveAfterATK=true;//是否可以攻击后移动
-        ATK_Grand=Ori_ATK_Grand=10;//基础数值
-        ATK_Sky=Ori_ATK_Sky=1;
-        DEF=Ori_DEF=3;
-        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=5;
+        DEF=Ori_DEF=2;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
         Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
         Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
         Life=Ori_Life=8;
         CurePoint=1;
         ATKRange=Ori_ATKRange=1;
-        ActionPoint=Ori_ActionPoint=7;
+        ActionPoint=Ori_ActionPoint=4;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
+        break;
+    case 104:
+        MaintenanceCost=20;
+        Cost=120;
+        Name="全能战士";
+        Des="这是轰炸机";
+        ATKType=BOTH;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=6;//基础数值
+        ATK_Sky=Ori_ATK_Sky=4;
+        ATK_Base=8;
+        DEF=Ori_DEF=2;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=1;Bonus[2][1]=0;Bonus[2][2]=1;
+        Life=Ori_Life=8;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=5;
         ViewRange=Ori_ViewRange=3;
         ATKAble=true;
         IsATKed=false;
         break;
-    case 5:
-        MaintenanceCost=5;
-        Cost=30;
-        Name="歼击机";
+    case 105:
+        MaintenanceCost=50;
+        Cost=250;
+        Name="光速战机";
         Des="这是歼击机";
         ATKType=BOTH;//攻击类型（对空对地）
         UnitType=FLY;//单位类型
         ATKAfterMove=true;//是否可以移动后攻击
         MoveAfterATK=true;//是否可以攻击后移动
-        ATK_Grand=Ori_ATK_Grand=1;//基础数值
-        ATK_Sky=Ori_ATK_Sky=8;
+        ATK_Grand=Ori_ATK_Grand=7;//基础数值
+        ATK_Sky=Ori_ATK_Sky=3;
+        ATK_Base=8;
+        DEF=Ori_DEF=1;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=-1;
+        Bonus[2][0]=0;Bonus[2][1]=1;Bonus[2][2]=1;
+        Life=Ori_Life=8;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=6;
+        ViewRange=Ori_ViewRange=3;
+        ATKAble=true;
+        break;
+    case 106:
+        MaintenanceCost=80;
+        Cost=350;
+        Name="量子战机";
+        Des="这是歼击机";
+        ATKType=BOTH;//攻击类型（对空对地）
+        UnitType=FLY;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=6;//基础数值
+        ATK_Sky=Ori_ATK_Sky=5;
+        ATK_Base=15;
+        DEF=Ori_DEF=2;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=1;
+        Life=Ori_Life=8;
+        CurePoint=2;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=7;
+        ViewRange=Ori_ViewRange=3;
+        ATKAble=true;
+        break;
+    case 107:
+        MaintenanceCost=120;
+        Cost=600;
+        Name="瓦解炮";
+        Des="这是歼击机";
+        ATKType=GRAND;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=false;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=12;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=25;
+        DEF=Ori_DEF=1;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+        Life=Ori_Life=8;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=4;
+        ActionPoint=Ori_ActionPoint=4;
+        ViewRange=Ori_ViewRange=4;
+        ATKAble=true;
+        break;
+
+    case 201:
+        MaintenanceCost=2;
+        Cost=15;
+        Name="沉沦魔";
+        Des="这是一个机枪兵";
+        ATKType=GRAND;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=5;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=5;
+        DEF=Ori_DEF=2;
+
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=1;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+
+        Life=Ori_Life=5;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=4;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
+        break;
+    case 202:
+        MaintenanceCost=5;
+        Cost=40;
+        Name="剧毒蜘蛛";
+        Des="这是一个防空兵";
+        ATKType=GRAND;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=6;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=5;
+        DEF=Ori_DEF=0;
+        Bonus[0][0]=0;Bonus[0][1]=1;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=1;Bonus[2][1]=0;Bonus[2][2]=0;
+        Life=Ori_Life=5;
+        CurePoint=2;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=7;
+        ViewRange=Ori_ViewRange=3;
+        ATKAble=true;
+        break;
+    case 203:
+        MaintenanceCost=10;
+        Cost=80;
+        Name="邪恶法师";
+        Des="这是坦克";
+        ATKType=BOTH;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=5;//基础数值
+        ATK_Sky=Ori_ATK_Sky=4;
+        ATK_Base=5;
+        DEF=Ori_DEF=2;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=1;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+        Life=Ori_Life=8;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=4;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
+        break;
+    case 204:
+        MaintenanceCost=20;
+        Cost=100;
+        Name="邪恶毒蜂";
+        Des="这是轰炸机";
+        ATKType=GRAND;//攻击类型（对空对地）
+        UnitType=FLY;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=5;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=8;
+        DEF=Ori_DEF=2;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=1;Bonus[2][1]=0;Bonus[2][2]=1;
+        Life=Ori_Life=8;
+        CurePoint=2;
+        ATKRange=Ori_ATKRange=2;
+        ActionPoint=Ori_ActionPoint=5;
+        ViewRange=Ori_ViewRange=3;
+        ATKAble=true;
+        break;
+    case 205:
+        MaintenanceCost=50;
+        Cost=250;
+        Name="镰刀魔";
+        Des="这是歼击机";
+        ATKType=GRAND;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=7;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=8;
         DEF=Ori_DEF=3;
-        Bonus[0][0]=8;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=1;Bonus[1][1]=0;Bonus[1][2]=1;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+        Life=Ori_Life=10;
+        CurePoint=2;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=5;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
+        break;
+    case 206:
+        MaintenanceCost=80;
+        Cost=350;
+        Name="剧毒蜂王";
+        Des="这是歼击机";
+        ATKType=BOTH;//攻击类型（对空对地）
+        UnitType=FLY;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=7;//基础数值
+        ATK_Sky=Ori_ATK_Sky=4;
+        ATK_Base=15;
+        DEF=Ori_DEF=1;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=1;Bonus[1][2]=0;
+        Bonus[2][0]=1;Bonus[2][1]=0;Bonus[2][2]=1;
+        Life=Ori_Life=8;
+        CurePoint=2;
+        ATKRange=Ori_ATKRange=2;
+        ActionPoint=Ori_ActionPoint=5;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
+        break;
+    case 207:
+        MaintenanceCost=120;
+        Cost=500;
+        Name="堕天使";
+        Des="这是歼击机";
+        ATKType=BOTH;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=8;//基础数值
+        ATK_Sky=Ori_ATK_Sky=6;
+        ATK_Base=20;
+        DEF=Ori_DEF=3;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
         Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
         Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
         Life=Ori_Life=10;
-        CurePoint=1;
-        ATKRange=Ori_ATKRange=1;
-        ActionPoint=Ori_ActionPoint=8;
+        CurePoint=2;
+        ATKRange=Ori_ATKRange=2;
+        ActionPoint=Ori_ActionPoint=7;
         ViewRange=Ori_ViewRange=3;
         ATKAble=true;
+        break;
+
+
+    case 301:
+        MaintenanceCost=2;
+        Cost=20;
+        Name="天使";
+        Des="这是一个机枪兵";
+        ATKType=GRAND;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=5;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=2;
+        DEF=Ori_DEF=2;
+
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+
+        Life=Ori_Life=5;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=4;
+        ViewRange=Ori_ViewRange=3;
+        ATKAble=true;
+        break;
+    case 302:
+        MaintenanceCost=5;
+        Cost=40;
+        Name="大天使";
+        Des="这是一个防空兵";
+        ATKType=GRAND;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=6;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=4;
+        DEF=Ori_DEF=1;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+        Life=Ori_Life=8;
+        CurePoint=2;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=4;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
+        break;
+    case 303:
+        MaintenanceCost=12;
+        Cost=80;
+        Name="能天使";
+        Des="这是坦克";
+        ATKType=SKY;//攻击类型（对空对地）
+        UnitType=FLY;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=0;//基础数值
+        ATK_Sky=Ori_ATK_Sky=4;
+        ATK_Base=5;
+        DEF=Ori_DEF=1;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=1;
+        Life=Ori_Life=8;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=5;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
+        break;
+    case 304:
+        MaintenanceCost=30;
+        Cost=150;
+        Name="力天使";
+        Des="这是轰炸机";
+        ATKType=GRAND;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=7;//基础数值
+        ATK_Sky=Ori_ATK_Sky=0;
+        ATK_Base=8;
+        DEF=Ori_DEF=2;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=1;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=1;Bonus[2][1]=0;Bonus[2][2]=0;
+        Life=Ori_Life=8;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=4;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
         IsATKed=false;
+        break;
+    case 305:
+        MaintenanceCost=50;
+        Cost=250;
+        Name="高阶天使";
+        Des="这是歼击机";
+        ATKType=SKY;//攻击类型（对空对地）
+        UnitType=FLY;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=0;//基础数值
+        ATK_Sky=Ori_ATK_Sky=6;
+        ATK_Base=8;
+        DEF=Ori_DEF=1;
+        Bonus[0][0]=0;Bonus[0][1]=1;Bonus[0][2]=1;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=-1;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+        Life=Ori_Life=8;
+        CurePoint=1;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=5;
+        ViewRange=Ori_ViewRange=2;
+        ATKAble=true;
+        break;
+    case 306:
+        MaintenanceCost=100;
+        Cost=400;
+        Name="六翼天使";
+        Des="这是歼击机";
+        ATKType=BOTH;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=false;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=8;//基础数值
+        ATK_Sky=Ori_ATK_Sky=4;
+        ATK_Base=15;
+        DEF=Ori_DEF=3;
+        Bonus[0][0]=0;Bonus[0][1]=1;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=1;
+        Life=Ori_Life=10;
+        CurePoint=2;
+        ATKRange=Ori_ATKRange=1;
+        ActionPoint=Ori_ActionPoint=5;
+        ViewRange=Ori_ViewRange=3;
+        ATKAble=true;
+        break;
+    case 307:
+        MaintenanceCost=150;
+        Cost=600;
+        Name="创世神";
+        Des="这是歼击机";
+        ATKType=BOTH;//攻击类型（对空对地）
+        UnitType=NORMAL;//单位类型
+        ATKAfterMove=true;//是否可以移动后攻击
+        MoveAfterATK=true;//是否可以攻击后移动
+        ATK_Grand=Ori_ATK_Grand=7;//基础数值
+        ATK_Sky=Ori_ATK_Sky=4;
+        ATK_Base=20;
+        DEF=Ori_DEF=4;
+        Bonus[0][0]=0;Bonus[0][1]=0;Bonus[0][2]=0;
+        Bonus[1][0]=0;Bonus[1][1]=0;Bonus[1][2]=0;
+        Bonus[2][0]=0;Bonus[2][1]=0;Bonus[2][2]=0;
+        Life=Ori_Life=10;
+        CurePoint=3;
+        ATKRange=Ori_ATKRange=3;
+        ActionPoint=Ori_ActionPoint=7;
+        ViewRange=Ori_ViewRange=3;
+        ATKAble=true;
         break;
     }
 }

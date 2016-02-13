@@ -24,12 +24,39 @@ public:
 
     QHBoxLayout* MainLayout;
 
-    void mousePressEvent(QMouseEvent* e){
-        this->setStyleSheet("background-color:yellow");
+    void focusin(){
+        this->setStyleSheet("border-image:url(:/pixmap/button/list1.png);");
+        Msg.setStyleSheet("border-image:url(:/pixmap/solid.png);color:white;");
+
     }
-    void mouseReleaseEvent(QMouseEvent* e){
-        this->setStyleSheet("background-color:blue");
+
+    void focusout(){
+        this->setStyleSheet("border-image:url(:/pixmap/button/list2.png);");
+        Msg.setStyleSheet("border-image:url(:/pixmap/solid.png);color:white;");
     }
+
+//    void focusInEvent(QFocusEvent *e){
+//        this->setStyleSheet("border-image:url(:/pixmap/button/list2.png);");
+//        Msg.setStyleSheet("border-image:url(:/pixmap/solid.png);color:white;");
+//        e->ignore();
+//    }
+
+//    void focusOutEvent(QFocusEvent *e){
+//        this->setStyleSheet("border-image:url(:/pixmap/button/list1.png);");
+//        Msg.setStyleSheet("border-image:url(:/pixmap/solid.png);color:white;");
+//        e->ignore();
+//    }
+
+//    void mousePressEvent(QMouseEvent* e){
+//        this->setStyleSheet("border-image:url(:/pixmap/button/list2.png);");
+//        Msg.setStyleSheet("border-image:url(:/pixmap/solid.png);color:white;");
+//        e->ignore();
+//    }
+//    void mouseReleaseEvent(QMouseEvent* e){
+//        this->setStyleSheet("border-image:url(:/pixmap/button/list1.png);");
+//        Msg.setStyleSheet("border-image:url(:/pixmap/solid.png);color:white;");
+//        e->ignore();
+//    }
 
 
 };
@@ -41,9 +68,12 @@ MyListItem::MyListItem(QString str){
     MainLayout->addWidget(&Msg);
     this->setLayout(MainLayout);
 
+    this->setStyleSheet("border-image:url(:/pixmap/button/list2.png);");
     Msg.setText(str);
+    Msg.setAlignment(Qt::AlignCenter);
+    Msg.setStyleSheet("border-image:url(:/pixmap/solid.png);color:white;");
 
-    this->setStyleSheet("background-color:white");
+
 }
 
 MyListItem::~MyListItem(){

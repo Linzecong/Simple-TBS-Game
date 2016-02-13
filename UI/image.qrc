@@ -21,5 +21,37 @@
         <file>state/hover3.png</file>
         <file>state/range2.png</file>
         <file>state/range3.png</file>
+        <file>button/singlebutton1.png</file>
+        <file>button/singlebutton2.png</file>
+        <file>button/end1.png</file>
+        <file>button/end2.png</file>
+        <file>button/onlinebutton1.png</file>
+        <file>button/onlinebutton2.png</file>
+        <file>button/setting1.png</file>
+        <file>button/setting2.png</file>
+        <file>background/start.png</file>
+        <file>background/choosemap.png</file>
+        <file>solid.png</file>
+        <file>background/chooserace.png</file>
+        <file>button/begin1.png</file>
+        <file>button/begin2.png</file>
+        <file>button/goon1.png</file>
+        <file>button/goon2.png</file>
+        <file>button/next1.png</file>
+        <file>button/next2.png</file>
+        <file>button/previous1.png</file>
+        <file>button/previous2.png</file>
+        <file>button/button1.png</file>
+        <file>button/button2.png</file>
+        <file>button/button3.png</file>
+        <file>button/list1.png</file>
+        <file>button/list2.png</file>
+        <file>state/attack4.png</file>
+        <file>state/hover4.png</file>
+        <file>state/range4.png</file>
+        <file>unit/1_3_1.png</file>
+        <file>unit/1_4_1.png</file>
+        <file>base/base31.png</file>
+        <file>base/base41.png</file>
     </qresource>
 </RCC>

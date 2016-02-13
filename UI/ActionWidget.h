@@ -22,11 +22,13 @@ public:
 };
 
 ActionWidget::ActionWidget(double Size){
+    this->setStyleSheet("border-image:url(:/pixmap/solid.png);");
     Attack=new QPushButton("攻击",this);
-    Attack->setStyleSheet("background:url(:pixmap/grass/seen.png)");
+    Attack->setStyleSheet("QPushButton{border-image:url(:/pixmap/button/button1.png);color:white;}QPushButton:pressed{border-image:url(:/pixmap/button/button2.png);color:white;}QPushButton:disabled{border-image:url(:/pixmap/button/button3.png);color:grey;}");
     Move=new QPushButton("移动",this);
-    Move->setStyleSheet("background:url(:pixmap/grass/seen.png)");
+    Move->setStyleSheet("QPushButton{border-image:url(:/pixmap/button/button1.png);color:white;}QPushButton:pressed{border-image:url(:/pixmap/button/button2.png);color:white;}QPushButton:disabled{border-image:url(:/pixmap/button/button3.png);color:grey;}");
     Cure=new QPushButton("治疗",this);
+    Cure->setStyleSheet("QPushButton{border-image:url(:/pixmap/button/button1.png);color:white;}QPushButton:pressed{border-image:url(:/pixmap/button/button2.png);color:white;}QPushButton:disabled{border-image:url(:/pixmap/button/button3.png);color:grey;}");
 
     Attack->setGeometry(0,0,65*Size,90*Size/3);
     Move->setGeometry(0,90*Size/3,65*Size,90*Size/3);

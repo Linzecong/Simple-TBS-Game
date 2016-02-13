@@ -55,7 +55,7 @@ void GameSystem::moveTo(int x, int y, Unit* unit){
 bool GameSystem::canMoveTo(int x, int y, Unit* unit){
     if(unit->canMove()==false)
         return false;
-    Map* map= this->GameMap.findWay(unit->X,unit->Y);
+    Map* map= this->GameMap.findWay(unit->X,unit->Y,unit->Player);
     int temp=map->GameMap[x][y].Data;
     delete map;
     if(temp>unit->ActionPoint)
@@ -65,6 +65,13 @@ bool GameSystem::canMoveTo(int x, int y, Unit* unit){
 }
 
 int GameSystem::attack(Unit *atk, Unit *def,Player* atkplayer,Player* defplayer,int range){
+
+    atk->ATK_Grand=double((double(atk->Ori_Life)+double(atk->Life))/(double(atk->Ori_Life)*2))*double(atk->Ori_ATK_Grand);
+    atk->ATK_Sky=double((double(atk->Ori_Life)+double(atk->Life))/(double(atk->Ori_Life)*2))*double(atk->Ori_ATK_Sky);
+
+    def->ATK_Grand=double((double(def->Ori_Life)+double(def->Life))/(double(def->Ori_Life)*2))*double(def->Ori_ATK_Grand);
+    def->ATK_Sky=double((double(def->Ori_Life)+double(def->Life))/(double(def->Ori_Life)*2))*double(def->Ori_ATK_Sky);
+
     int BonusATKType=GameMap.GameMap[atk->X][atk->Y].Type;
     int BonusDEFType=GameMap.GameMap[def->X][def->Y].Type;
 
@@ -74,6 +81,8 @@ int GameSystem::attack(Unit *atk, Unit *def,Player* atkplayer,Player* defplayer,
     else
         damage=atk->ATK_Sky+atk->Bonus[BonusATKType][1]-def->DEF-def->Bonus[BonusDEFType][2];
 
+    if((GameMap.GameMap[atk->X][atk->Y].NormalUnit.length()+GameMap.GameMap[atk->X][atk->Y].FlyUnit.length())-(GameMap.GameMap[def->X][def->Y].NormalUnit.length()+GameMap.GameMap[def->X][def->Y].FlyUnit.length())==2)
+    damage+=1;
     if(damage<0)
         damage=0;
 
@@ -87,12 +96,19 @@ int GameSystem::attack(Unit *atk, Unit *def,Player* atkplayer,Player* defplayer,
         else
             damage1=def->ATK_Sky+def->Bonus[BonusDEFType][1]-atk->DEF-atk->Bonus[BonusATKType][2];
 
-
+        if((GameMap.GameMap[def->X][def->Y].NormalUnit.length()+GameMap.GameMap[def->X][def->Y].FlyUnit.length())-(GameMap.GameMap[atk->X][atk->Y].NormalUnit.length()+GameMap.GameMap[atk->X][atk->Y].FlyUnit.length())==2)
+        damage1+=1;
         if(damage1<0)
             damage1=0;
 
         atk->Life-=damage1;
     }
+
+    atk->ATK_Grand=double((double(atk->Ori_Life)+double(atk->Life))/(double(atk->Ori_Life)*2))*double(atk->Ori_ATK_Grand);
+    atk->ATK_Sky=double((double(atk->Ori_Life)+double(atk->Life))/(double(atk->Ori_Life)*2))*double(atk->Ori_ATK_Sky);
+
+    def->ATK_Grand=double((double(def->Ori_Life)+double(def->Life))/(double(def->Ori_Life)*2))*double(def->Ori_ATK_Grand);
+    def->ATK_Sky=double((double(def->Ori_Life)+double(def->Life))/(double(def->Ori_Life)*2))*double(def->Ori_ATK_Sky);
 
     //如果死亡
     if(def->Life<=0){
@@ -115,6 +131,8 @@ int GameSystem::attack(Unit *atk, Unit *def,Player* atkplayer,Player* defplayer,
     if(atk->MoveAfterATK==false)
         atk->ActionPoint=0;
 
+
+
     return damage;
 }
 
@@ -133,8 +151,11 @@ void GameSystem::turnout(){
         cost+=Player_Turn->UnitList[i].MaintenanceCost;
         Player_Turn->UnitList[i].ActionPoint=Player_Turn->UnitList[i].Ori_ActionPoint;
         Player_Turn->UnitList[i].IsATKed=0;
-        if(Player_Turn->UnitList[i].IsCure=1){
-            Player_Turn->UnitList[i].Life+=Player_Turn->UnitList[i].CurePoint;
+        if(Player_Turn->UnitList[i].IsCure==1){
+            if(GameMap.GameMap[Player_Turn->UnitList[i].X][Player_Turn->UnitList[i].Y].Construction==NULL)
+                Player_Turn->UnitList[i].Life+=Player_Turn->UnitList[i].CurePoint;
+            else
+                Player_Turn->UnitList[i].Life+=Player_Turn->UnitList[i].CurePoint*2;
             if(Player_Turn->UnitList[i].Life>Player_Turn->UnitList[i].Ori_Life)
                 Player_Turn->UnitList[i].Life=Player_Turn->UnitList[i].Ori_Life;
             Player_Turn->UnitList[i].IsCure=0;
@@ -142,8 +163,8 @@ void GameSystem::turnout(){
     }
     Player_Turn->Coin-=cost;
     Player_Turn->Coin+=Player_Turn->Capacity;
-    Player_Turn->Capacity+=10;
-    Player_Turn->Ori_Capacity+=10;
+    Player_Turn->Capacity+=Player_Turn->Ori_Capacity*Player_Turn->BaseList.length();
+
     for(int i=0;i<Player_Turn->BaseList.length();i++){
         Player_Turn->BaseList[i].IsUsed=0;
     }

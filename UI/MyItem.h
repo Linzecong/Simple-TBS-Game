@@ -13,7 +13,8 @@
 #include<QPushButton>
 #include <QtOpenGL/QGLWidget>
 #include <QTimer>
-//#include<QImage>
+
+int PressedTime;//保存长按了的时间
 
 class MyItem:public QGraphicsItem{
 public:
@@ -54,6 +55,7 @@ public:
         LX=event->scenePos().x();
         IsMove=0;
         IsPressed=true;
+        PressedTime=0;
         Timer.start(100);
     }
 
@@ -61,19 +63,16 @@ public:
         LY=event->scenePos().y();
         LX=event->scenePos().x();
         IsPressed=false;
+
+        PressedTime=0;
+        Timer.stop();//向上级传递信息用
         if(!IsMove)
             Press.click();
-
-        Timer.stop();//向上级传递信息用
-        if(Timer.objectName()=="baba")
-            Timer.setObjectName("baba1");
-        else
-            Timer.setObjectName("baba");
-
     }
 
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event){
         if(IsPressed){
+            Timer.stop();
             IsMove=1;
             QPoint a=event->scenePos().toPoint();
             int y=a.y()-LY;
@@ -129,7 +128,7 @@ void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         if(this->MyGrid->Type==Grid::HILL)
             GridPixmap.load(":/pixmap/hill/unseen.png");
     }
-    painter->drawPixmap(-40*Size,-35*Size,GridPixmap);
+    painter->drawPixmap(-40*Size,-35*Size,80*Size,70*Size,GridPixmap);
     /*绘制格子结束*/
 
 
@@ -145,16 +144,25 @@ void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         if(ATKMode)
             StatePixmap.load(":/pixmap/state/attack"+PixmapState+".png");
     }
-    painter->drawPixmap(-40*Size,-35*Size,StatePixmap);
+    painter->drawPixmap(-40*Size,-35*Size,80*Size,70*Size,StatePixmap);
     /*绘制焦点结束*/
 
 
     /*绘制基地*/
     QPixmap BasePixmap;
-    if(this->MyGrid->Construction!=NULL)
-        BasePixmap.load(":/pixmap/base/base"+QString::number(this->MyGrid->Construction->Player)+PixmapState+".png");
+    if(this->MyGrid->Construction!=NULL){
+        //  BasePixmap.load(":/pixmap/base/base"+QString::number(this->MyGrid->Construction->Player)+PixmapState+".png");
+         BasePixmap.load(":/pixmap/base/base"+QString::number(this->MyGrid->Construction->Player)+"1.png");
+    painter->drawPixmap(-40*Size,-35*Size,80*Size,70*Size,BasePixmap);
 
-    painter->drawPixmap(-40*Size,-35*Size,BasePixmap);
+        QFont font;
+        font.setPixelSize(15*Size);
+        painter->setFont(font);
+        QPen pen(Qt::white);
+        painter->setPen(pen);
+        painter->drawText(-15*Size,-23*Size,QString::number(MyGrid->Construction->Life));
+
+    }
     /*绘制基地结束*/
 
 
@@ -162,16 +170,32 @@ void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     QPixmap NormalUnitPixmap;
     if(IsSeen){
         if(this->MyGrid->NormalUnit.isEmpty()==false)
-            NormalUnitPixmap.load(":/pixmap/unit/"+QString::number(this->MyGrid->NormalUnit[0]->ID)+"_"+QString::number(this->MyGrid->NormalUnit[0]->Player)+"_"+PixmapState+".png");
-        painter->drawPixmap(-38*Size,-34*Size,NormalUnitPixmap);
+            //NormalUnitPixmap.load(":/pixmap/unit/"+QString::number(this->MyGrid->NormalUnit[0]->ID)+"_"+QString::number(this->MyGrid->NormalUnit[0]->Player)+"_"+PixmapState+".png");
+            NormalUnitPixmap.load(":/pixmap/unit/1_"+QString::number(this->MyGrid->NormalUnit[0]->Player)+"_1.png");
+        painter->drawPixmap(-40*Size,-35*Size,80*Size,70*Size,NormalUnitPixmap);
 
         QPixmap FlyUnitPixmap;
         if(this->MyGrid->FlyUnit.isEmpty()==false)
-            FlyUnitPixmap.load(":/pixmap/unit/"+QString::number(this->MyGrid->FlyUnit[0]->ID)+"_"+QString::number(this->MyGrid->FlyUnit[0]->Player)+"_"+PixmapState+".png");
-        painter->drawPixmap(-38*Size,-34*Size,FlyUnitPixmap);
+            //FlyUnitPixmap.load(":/pixmap/unit/"+QString::number(this->MyGrid->FlyUnit[0]->ID)+"_"+QString::number(this->MyGrid->FlyUnit[0]->Player)+"_"+PixmapState+".png");
+            FlyUnitPixmap.load(":/pixmap/unit/1_"+QString::number(this->MyGrid->FlyUnit[0]->Player)+"_1.png");
+        painter->drawPixmap(-40*Size,-35*Size,80*Size,70*Size,FlyUnitPixmap);
     }
     /*绘制单位结束*/
+
+    if(this->IsSeen){
+        int count=MyGrid->NormalUnit.length()+MyGrid->FlyUnit.length();
+        if(count>0){
+            QFont font;
+            font.setPixelSize(15*Size);
+            painter->setFont(font);
+            QPen pen(Qt::white);
+            painter->setPen(pen);
+            painter->drawText(15*Size,32*Size,QString::number(count));
+        }
+    }
+
 }
+
 
 void MyItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
     IsHover=1;

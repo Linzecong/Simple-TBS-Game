@@ -37,6 +37,12 @@ TrainWidget::TrainWidget(Player* a,Base b):ui(new Ui::TrainWidget){
     ui->TrainButton->setEnabled(false);
     connect(ui->CanTrainList,&QListWidget::clicked,this,&TrainWidget::List_Click);
     connect(ui->TrainButton,&QPushButton::clicked,this,&TrainWidget::Train_Click);
+
+    int H=QApplication::desktop()->height();
+    int W=QApplication::desktop()->width();
+    ui->TrainButton->setFixedSize(W/4,H/16);
+
+
 }
 
 void TrainWidget::List_Click(){
@@ -56,6 +62,12 @@ void TrainWidget::List_Click(){
     ui->ViewRange->setText(QString::number(Choose.ViewRange));
     ui->MaintenanceCost->setText(QString::number(Choose.MaintenanceCost));
     ui->Cost->setText(QString::number(Choose.Cost)+"/"+QString::number(Me->Coin));
+    ui->Bonus->setText("加成表：地攻|空攻|防御\n");
+    ui->Bonus->setText(ui->Bonus->text()+"草地    ："+QString::number(Choose.Bonus[0][0])+"      |"+QString::number(Choose.Bonus[0][1])+"      |"+QString::number(Choose.Bonus[0][2])+"\n");
+    ui->Bonus->setText(ui->Bonus->text()+"沙地    ："+QString::number(Choose.Bonus[1][0])+"      |"+QString::number(Choose.Bonus[1][1])+"      |"+QString::number(Choose.Bonus[1][2])+"\n");
+    ui->Bonus->setText(ui->Bonus->text()+"森林    ："+QString::number(Choose.Bonus[2][0])+"      |"+QString::number(Choose.Bonus[2][1])+"      |"+QString::number(Choose.Bonus[2][2])+"\n");
+
+
 
     if(Choose.Cost>Me->Coin)
         ui->TrainButton->setEnabled(false);

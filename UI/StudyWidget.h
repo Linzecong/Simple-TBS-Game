@@ -41,6 +41,12 @@ StudyWidget::StudyWidget(Player* a):ui(new Ui::StudyWidget){
     connect(ui->CanStudyList,&QListWidget::clicked,this,&StudyWidget::CanStudy_Click);
     connect(ui->StudyButton,&QPushButton::clicked,this,&StudyWidget::StudyButton_Click);
     ui->StudyButton->setEnabled(false);
+    int H=QApplication::desktop()->height();
+    int W=QApplication::desktop()->width();
+    ui->StudyButton->setFixedSize(W/4,H/16);
+
+
+
 }
 
 void StudyWidget::Studied_Click(){
